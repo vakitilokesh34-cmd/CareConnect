@@ -1,137 +1,190 @@
 # CareConnect
 
-CareConnect is a full-stack home-services marketplace. Customers describe a repair or maintenance problem, the platform classifies it, matches suitable verified providers, gathers quotes, and tracks the booking through completion, invoice generation, and review.
+CareConnect is a home-services booking platform. It helps customers find verified professionals and helps providers receive suitable service work.
 
-In simple terms: it is a digital coordinator for home services. It helps a customer find the right professional, helps providers win suitable work, and gives the platform team a clear view of each job.
+## 1. What CareConnect does
 
-## What the platform does
+1. A customer describes a home-service problem.
+2. The system identifies the service category, urgency, and useful skills.
+3. Suitable verified providers are matched to the request.
+4. Providers send quotes.
+5. The customer compares quotes and creates a booking.
+6. The provider updates the work until it is completed.
+7. The customer confirms completion, receives an invoice, and can add a review.
 
-The product supports five roles:
+## 2. User roles
 
-| Role | Main capabilities |
-| --- | --- |
-| Customer | Create service requests, compare quotes, create bookings, track work, confirm completion, review, and raise disputes. |
-| Service provider | View AI-matched requests, submit quotes, manage assigned work, update job progress, and maintain availability. |
-| Operations manager | Monitor bookings, assign providers, and review operational quality. |
-| Platform admin | Manage users, categories, provider verification, analytics, and disputes. |
-| Support agent | Handle customer complaints and resolve disputes. |
+1. **Customer**
+   - Creates requests.
+   - Compares quotes.
+   - Books a provider.
+   - Tracks work, invoices, reviews, and disputes.
 
-## Technology at a glance
+2. **Service provider**
+   - Views service requests matched to their profile.
+   - Sends quotes.
+   - Updates job status and evidence photos.
+   - Manages profile, availability, and earnings.
 
-This table explains both **what each technology is** and **why it is used in CareConnect**.
+3. **Operations manager**
+   - Monitors bookings.
+   - Assigns providers when needed.
+   - Reviews service performance.
 
-| Technology | Where it is used | What it does here |
-| --- | --- | --- |
-| React | Frontend | Builds the screens people use: login, service requests, quotes, bookings, dashboards, and forms. React updates the screen smoothly as data changes. |
-| Vite | Frontend tooling | Runs the local frontend quickly during development and creates the optimized production files for deployment. |
-| React Router | Frontend navigation | Moves users between pages without a full browser reload and protects pages based on the signed-in user’s role. |
-| Tailwind CSS | Frontend styling | Provides the responsive layout, colors, spacing, animations, and mobile-friendly interface styles. |
-| Axios | Frontend API client | Sends requests from the React app to the backend, including the user’s sign-in token automatically. |
-| Node.js | Backend runtime | Runs the server-side JavaScript code outside the browser. |
-| Express | Backend web framework | Defines the REST API endpoints, receives requests, applies middleware, and returns JSON responses. |
-| MongoDB | Database | Stores application data such as users, provider profiles, requests, quotes, bookings, invoices, reviews, and disputes. |
-| Mongoose | Database layer | Defines MongoDB data models and gives the backend a structured, validated way to query and update data. |
-| JSON Web Tokens (JWT) | Authentication | Keeps users signed in securely. The frontend sends the token with protected API requests; the backend checks it before allowing access. |
-| bcryptjs | Password security | Hashes passwords before storing them, so raw passwords are never saved in the database. |
-| Express Validator | Input validation | Rejects invalid or incomplete API input before it reaches the core business logic. |
-| Multer | File uploads | Handles booking evidence images and other uploaded files, currently storing them in the backend upload folder. |
-| Google Gemini API | Optional AI service | Classifies a customer’s written problem into a service category, urgency level, and required skills. A local heuristic is used when no Gemini key is configured. |
-| lucide-react | Frontend icons | Supplies the lightweight, consistent icons used throughout the interface. |
+4. **Platform admin**
+   - Manages users, providers, service categories, analytics, and disputes.
 
-## How the pieces work together
+5. **Support agent**
+   - Handles complaints.
+   - Resolves customer disputes.
+
+## 3. Technology used
+
+### 3.1 Frontend
+
+1. **React**
+   - Builds all website screens.
+   - Used for pages such as login, service requests, quotes, bookings, and dashboards.
+   - Updates the interface without a full browser refresh.
+
+2. **Vite**
+   - Starts the frontend quickly during development.
+   - Creates optimized frontend files for production.
+   - Runs on port `5173` by default.
+
+3. **React Router**
+   - Controls navigation between pages.
+   - Protects dashboard pages based on the signed-in user’s role.
+
+4. **Tailwind CSS**
+   - Creates the responsive design, layout, colors, spacing, and animations.
+   - Helps the interface work well on desktop and mobile.
+
+5. **Axios**
+   - Sends API requests from the frontend to the backend.
+   - Adds the user’s authentication token to protected requests.
+
+6. **lucide-react**
+   - Provides lightweight icons for the user interface.
+
+### 3.2 Backend
+
+1. **Node.js**
+   - Runs JavaScript on the server.
+   - Executes the backend business logic.
+
+2. **Express**
+   - Creates the REST API.
+   - Receives frontend requests, checks rules, and sends JSON responses.
+   - Runs on port `5001` by default.
+
+3. **MongoDB**
+   - Stores users, requests, quotes, bookings, invoices, reviews, notifications, and disputes.
+
+4. **Mongoose**
+   - Connects Express to MongoDB.
+   - Defines and validates database models such as `User`, `Quote`, and `Booking`.
+
+5. **JWT**
+   - Keeps users securely signed in.
+   - The backend checks the user token and role before allowing protected actions.
+
+6. **bcryptjs**
+   - Hashes passwords before they are saved in the database.
+
+7. **Express Validator**
+   - Checks incoming data before it reaches the main backend logic.
+   - Prevents invalid booking, quote, and form data.
+
+8. **Multer**
+   - Handles evidence photos and other file uploads.
+
+9. **Google Gemini API (optional)**
+   - Helps classify the customer’s written problem.
+   - Identifies category, urgency, and required skills.
+   - A built-in fallback is used when no Gemini key is available.
+
+## 4. How the technologies work together
+
+1. A user opens the React website.
+2. React uses Axios to send a request to `/api`.
+3. Vite forwards that request to the Express backend during local development.
+4. Express checks the JWT token, role, and request data.
+5. Mongoose reads or writes data in MongoDB.
+6. The backend returns JSON data to React.
+7. React updates the screen with the latest data.
 
 ```text
-Customer or provider uses the React website
-                |
-                | Axios sends a request to /api
-                v
-Express backend checks the JWT, role, and input
-                |
-                +--> Mongoose reads or writes MongoDB data
-                |
-                +--> AI service classifies a new request when needed
-                |
-                v
-Backend returns a JSON response
-                |
-                v
-React updates the page with the latest information
-```
-
-For example, when a customer chooses a quote, React sends the selected quote and time slot to Express. Express confirms the customer owns the request, checks provider availability, creates the booking in MongoDB, updates the quote and request status, then returns the new booking. React redirects the customer to that booking’s details screen.
-
-## How a service request becomes a completed job
-
-1. A customer creates a request with a description, location, and preferred schedule.
-2. The backend classifies the description using Gemini when configured, or its built-in heuristic fallback.
-3. The recommendation service finds and ranks verified providers by category, skills, availability, and location.
-4. Matched providers see the request and submit one quote each.
-5. The customer compares quotes and selects one. Creating the booking accepts that quote atomically and marks the request as booked.
-6. The provider moves the booking through its lifecycle: `CONFIRMED` → `ACCEPTED` → `ON_THE_WAY` → `IN_PROGRESS` → `COMPLETED`.
-7. The customer confirms completion. The system creates a paid invoice, updates job metrics, and prompts for a review.
-
-The platform creates notifications for major request, quote, booking, and dispute events.
-
-## Architecture
-
-```text
-React + Vite frontend (port 5173)
+React frontend (port 5173)
         |
-        | /api proxy
+        | Axios API request
         v
-Express REST API (port 5001)
+Express backend (port 5001)
         |
-        +-- MongoDB (careconnect database)
-        +-- Gemini AI API (optional)
-        +-- Local uploads directory
+        +-- MongoDB database
+        +-- Gemini AI service (optional)
+        +-- Uploads folder
 ```
 
-### Frontend — the part people see and use
+## 5. Request to booking flow
 
-The client lives in [`frontend`](frontend). It uses:
+1. The customer creates a request with a title, description, address, date, and time.
+2. The backend classifies the request.
+3. The recommendation service finds providers with suitable skills.
+4. Matched providers see the request.
+5. A provider sends a quote with price, duration, and work description.
+6. The customer compares all received quotes.
+7. The customer selects one quote.
+8. The backend creates the booking.
+9. The chosen quote becomes `ACCEPTED`.
+10. The service request becomes `BOOKED`.
+11. The customer is redirected to the booking-details page.
+12. The provider moves the job through statuses:
+    - `CONFIRMED`
+    - `ACCEPTED`
+    - `ON_THE_WAY`
+    - `IN_PROGRESS`
+    - `COMPLETED`
+13. The customer confirms completion.
+14. The system finalizes an invoice and asks for a review.
 
-- React 18 and React Router for pages, layouts, and role-protected routes.
-- Axios with a JWT request interceptor for API calls.
-- Tailwind CSS for responsive UI and interface states.
-- Vite’s `/api` proxy to reach the backend during development.
+## 6. Project folders
 
-Important screens include customer requests/bookings, provider quote submission, provider jobs, operations monitoring, and admin/support consoles.
+1. `frontend/`
+   - React application.
+   - `src/pages/` contains pages.
+   - `src/components/` contains reusable UI components.
+   - `src/context/` contains authentication and notification state.
+   - `src/services/api.js` configures API requests.
 
-### Backend — the rules, permissions, and data
+2. `backend/`
+   - Express API.
+   - `routes/` defines endpoints.
+   - `controllers/` contains business logic.
+   - `models/` contains MongoDB schemas.
+   - `services/` contains AI, matching, availability, and notifications.
+   - `middleware/` contains authentication, validation, uploads, and error handling.
+   - `validators/` contains input-validation rules.
 
-The API lives in [`backend`](backend). It uses:
+## 7. Run the project locally
 
-- Express and Mongoose.
-- JWT authentication with role-based route authorization.
-- Express Validator for request validation.
-- MongoDB for users, provider profiles, requests, quotes, bookings, updates, invoices, reviews, notifications, and disputes.
-- Multer for locally stored uploaded files.
+### Step 1: Install requirements
 
-The API is organized by route, controller, model, middleware, and service layers:
+1. Install Node.js 18 or newer.
+2. Start MongoDB locally, or use a hosted MongoDB connection string.
+3. Open two terminals.
 
-```text
-backend/
-  routes/        REST endpoint definitions
-  controllers/   Request handlers and business actions
-  models/        Mongoose schemas
-  services/      AI, matching, availability, notifications
-  middleware/    Auth, validation, uploads, error handling
-  validators/    Input validation rules
+### Step 2: Configure and start backend
+
+1. Go to the backend folder:
+
+```powershell
+cd backend
 ```
 
-## Local setup
+2. Create `backend/.env` from `backend/.env.example`.
 
-If you are opening the project for the first time, start the backend first, then start the frontend in a second terminal. The frontend needs the backend for sign-in, requests, quotes, bookings, and all saved data.
-
-### Prerequisites
-
-- Node.js 18 or newer
-- MongoDB running locally, or a reachable MongoDB connection string
-- npm
-
-### Configure the backend
-
-Create `backend/.env` from the supplied example and set at least these values:
+3. Add configuration:
 
 ```env
 PORT=5001
@@ -139,101 +192,136 @@ CLIENT_URL=http://localhost:5173
 MONGO_URI=mongodb://localhost:27017/careconnect
 JWT_SECRET=replace-with-a-long-random-secret
 
-# Optional: enables Gemini classification instead of the heuristic fallback
+# Optional AI configuration
 GEMINI_API_KEY=
 GEMINI_MODEL=gemini-2.0-flash
 ```
 
-Install and start the API:
+4. Install packages and start the API:
 
 ```powershell
-cd backend
 npm install
 npm.cmd start
 ```
 
-The health endpoint should respond at `http://localhost:5001/api/health`.
+5. Check backend health:
 
-### Configure and run the frontend
+```text
+http://localhost:5001/api/health
+```
+
+### Step 3: Configure and start frontend
+
+1. Go to the frontend folder in the second terminal:
 
 ```powershell
 cd frontend
+```
+
+2. Install packages and start the app:
+
+```powershell
 npm install
 npm.cmd run dev
 ```
 
-Open `http://localhost:5173`.
+3. Open:
 
-The development proxy in `frontend/vite.config.js` forwards `/api` requests to `http://localhost:5001`.
-
-## Useful commands
-
-| Location | Command | Purpose |
-| --- | --- | --- |
-| `frontend` | `npm.cmd run dev` | Start the Vite development server. |
-| `frontend` | `npm.cmd run build` | Create a production frontend build in `dist/`. |
-| `frontend` | `npm.cmd run preview` | Preview a production build locally. |
-| `backend` | `npm.cmd start` | Start the Express API. |
-| `backend` | `npm.cmd run dev` | Start the API with nodemon. |
-| `backend` | `npm.cmd run seed` | Seed local development data. |
-
-## API overview
-
-All API routes are prefixed with `/api`. Protected routes expect:
-
-```http
-Authorization: Bearer <jwt>
+```text
+http://localhost:5173
 ```
 
-| Resource | Base route | Purpose |
-| --- | --- | --- |
-| Authentication | `/auth` | Register, sign in, and get the active user. |
-| Service requests | `/requests` | Create, list, inspect, and update customer requests. |
-| Providers | `/providers` | Search providers and retrieve profiles. |
-| Quotes | `/quotes` | Providers create/manage quotes; customers compare request quotes. |
-| Bookings | `/bookings` | Create bookings, get details, assign providers, change status, and confirm completion. |
-| Job updates | `/jobs/:bookingId/updates` | Track work progress and evidence. |
-| Invoices | `/invoices` | Retrieve generated invoices. |
-| Reviews | `/reviews` | Submit and display provider reviews. |
-| Disputes | `/disputes` | Create, assign, and resolve service disputes. |
-| Notifications | `/notifications` | Retrieve and mark notifications as read. |
+## 8. Useful commands
 
-## Booking and quote rules
+1. Start frontend:
 
-- Only verified providers may submit quotes.
-- A provider may quote only on a request matched to their provider profile.
-- A provider can submit only one quote per service request.
-- A booking can be created only from a pending quote owned by the selected provider.
-- Booking creation accepts the quote and marks the request as `BOOKED` in the same workflow.
-- Customers can access only their bookings; providers can access only bookings assigned to them; staff access is role controlled.
-- The customer must confirm a completed job before an invoice is finalized.
+```powershell
+cd frontend
+npm.cmd run dev
+```
 
-## Security and production notes
+2. Build frontend:
 
-- Replace the default development JWT secret before deploying.
-- Set a production `MONGO_URI`, `CLIENT_URL`, and `NODE_ENV=production`.
-- Store uploaded evidence in object storage rather than the local `uploads/` directory for production deployments.
-- Configure CORS to allow only trusted frontend origins.
-- Do not seed demo users in a production database.
-- Add rate limiting, request logging/monitoring, backups, and a real payment workflow before public launch.
+```powershell
+cd frontend
+npm.cmd run build
+```
 
-## Troubleshooting
+3. Start backend:
 
-| Problem | Likely cause and fix |
-| --- | --- |
-| Backend exits on startup | Confirm MongoDB is running and `MONGO_URI` is correct. |
-| `EADDRINUSE` on port 5001 | Another API instance is already running; stop it or change `PORT`. |
-| Frontend API calls fail | Start the backend, then confirm `frontend/vite.config.js` targets the same backend port. |
-| Provider sees no requests | The provider must have a verified profile and be matched by the recommendation service. |
-| Booking cannot be created | Check that the quote is still `PENDING`, belongs to the selected provider, and the provider is available for the selected time. |
+```powershell
+cd backend
+npm.cmd start
+```
 
-## Suggested learning path
+4. Start backend with auto-reload:
 
-If you are new to this codebase, this order makes it easier to understand:
+```powershell
+cd backend
+npm.cmd run dev
+```
 
-1. Start with `frontend/src/App.jsx` to see every page and protected route.
-2. Read `frontend/src/context/AuthContext.jsx` to understand how login state is stored.
-3. Read `backend/server.js` and `backend/routes/index.js` to see how the API starts and how routes are grouped.
-4. Follow one complete flow: `ServiceRequest` → `Quote` → `Booking` in the backend models, routes, and controllers.
-5. Review `backend/services/recommendationService.js` and `backend/services/aiService.js` to understand provider matching and AI classification.
+5. Seed development data:
 
+```powershell
+cd backend
+npm.cmd run seed
+```
+
+## 9. API groups
+
+1. `/api/auth` — register, login, and current user.
+2. `/api/requests` — service requests.
+3. `/api/providers` — provider search and profile details.
+4. `/api/quotes` — quote creation and quote comparison.
+5. `/api/bookings` — booking creation, updates, and confirmation.
+6. `/api/jobs` — job progress updates and evidence.
+7. `/api/invoices` — invoices.
+8. `/api/reviews` — provider reviews.
+9. `/api/disputes` — complaints and resolutions.
+10. `/api/notifications` — user notifications.
+
+## 10. Important business rules
+
+1. Only verified providers can submit quotes.
+2. Providers see only requests matched to their profile.
+3. A provider can submit only one quote per request.
+4. A booking can be created only from a `PENDING` quote.
+5. Creating a booking accepts the selected quote and marks the request as `BOOKED`.
+6. Customers can view only their own bookings.
+7. Providers can view only assigned jobs.
+8. Customers must confirm a completed job before the invoice is finalized.
+
+## 11. Troubleshooting
+
+1. **Backend does not start**
+   - Confirm MongoDB is running.
+   - Confirm `MONGO_URI` in `backend/.env` is correct.
+
+2. **Port 5001 is already in use**
+   - Another backend process is running.
+   - Stop it or change `PORT` in `backend/.env`.
+
+3. **Frontend API calls fail**
+   - Start the backend first.
+   - Confirm `frontend/vite.config.js` points to `http://localhost:5001`.
+
+4. **Provider sees no requests**
+   - Confirm the provider is verified.
+   - Confirm the provider was matched by the recommendation service.
+
+5. **Booking cannot be created**
+   - Confirm the quote is still pending.
+   - Confirm the provider is available at the selected time.
+   - Confirm the customer owns the service request.
+
+## 12. Before production deployment
+
+1. Replace the development JWT secret.
+2. Use a secure production MongoDB database.
+3. Set `NODE_ENV=production`.
+4. Set `CLIENT_URL` to the deployed frontend address.
+5. Store uploads in cloud object storage instead of the local uploads folder.
+6. Restrict CORS to trusted domains.
+7. Add rate limiting, monitoring, backups, and payment integration.
+8. Do not use seeded development accounts in production.
