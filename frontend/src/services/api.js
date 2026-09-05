@@ -1,7 +1,12 @@
 import axios from 'axios';
 
+// Keep API requests on the current origin by default. Vite proxies this path
+// locally and Vercel forwards it to Render through frontend/vercel.json.
+// VITE_API_URL can still be used when an explicit API URL is required.
+const apiBaseUrl = import.meta.env.VITE_API_URL || '/api';
+
 const api = axios.create({
-  baseURL: '/api',
+  baseURL: apiBaseUrl,
   headers: {
     'Content-Type': 'application/json',
   },
