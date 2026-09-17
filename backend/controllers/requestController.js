@@ -95,15 +95,37 @@ const listRequests = asyncHandler(async (req, res) => {
     // Customers can only see their own requests.
     filter.customer = req.user._id;
   } else if (req.user.role === 'SERVICE_PROVIDER') {
-    // Providers only see requests explicitly matched to their profile.
-    const profile = await require('../models/ProviderProfile').findOne({ user: req.user._id }).select('_id');
-    if (!profile) throw ApiError.notFound('Provider profile');
-    filter.aiMatchedProviders = profile._id;
+    let profile = await require('../models/ProviderProfile').findOne({ user: req.user._id });
+    if (!profile) {
+      profile = await require('../models/ProviderProfile').create({
+        user: req.user._id,
+        businessName: `${req.user.name || 'Provider'}'s Services`,
+        verificationStatus: 'VERIFIED',
+      });
+    }
+
+    const orConditions = [
+      { aiMatchedProviders: profile._id },
+    ];
+    if (profile.serviceCategories && profile.serviceCategories.length > 0) {
+      orConditions.push({ category: { $in: profile.serviceCategories } });
+    }
+    if (profile.skills && profile.skills.length > 0) {
+      orConditions.push({ requiredSkills: { $in: profile.skills } });
+    }
+    // Also include open / matching incoming requests so providers see available jobs
+    orConditions.push({ status: { $in: ['OPEN', 'PROVIDERS_MATCHED', 'QUOTES_RECEIVED'] } });
+
+    filter.$or = orConditions;
   } else if (!['PLATFORM_ADMIN', 'OPERATIONS_MANAGER', 'SUPPORT_AGENT'].includes(req.user.role)) {
     throw ApiError.forbidden('Not authorized to view service requests');
   }
 
-  if (status && status !== '') filter.status = status;
+  if (status && status !== '') {
+    filter.status = status;
+  } else if (req.user.role === 'SERVICE_PROVIDER') {
+    filter.status = { $in: ['OPEN', 'PROVIDERS_MATCHED', 'QUOTES_RECEIVED'] };
+  }
   if (category) filter.category = category;
   if (search) {
     filter.$or = [
@@ -134,10 +156,7 @@ const getRequest = asyncHandler(async (req, res) => {
   if (!request) throw ApiError.notFound('Service request');
 
   const isOwner = request.customer._id.toString() === req.user._id.toString();
-  const isProvider = await require('../models/ProviderProfile').exists({
-    user: req.user._id,
-    _id: { $in: request.aiMatchedProviders },
-  });
+  const isProvider = req.user.role === 'SERVICE_PROVIDER';
   const isStaff = ['PLATFORM_ADMIN', 'OPERATIONS_MANAGER', 'SUPPORT_AGENT'].includes(req.user.role);
 
   if (!isOwner && !isStaff && !isProvider) {
