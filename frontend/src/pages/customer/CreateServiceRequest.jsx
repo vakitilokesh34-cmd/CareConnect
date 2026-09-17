@@ -4,6 +4,17 @@ import { Sparkles, PlusCircle, Calendar, Clock, MapPin, AlertCircle, Wrench, Che
 import api from '../../services/api';
 import ErrorMessage from '../../components/ErrorMessage';
 
+const DEFAULT_CATEGORIES = [
+  { _id: '6a97bec9594177f07169d9a3', name: 'Plumbing', icon: '🚰', basePrice: 350 },
+  { _id: '6a97bec9594177f07169d9a5', name: 'Electrical', icon: '⚡', basePrice: 300 },
+  { _id: '6a97bec9594177f07169d9a7', name: 'Home Cleaning', icon: '🧹', basePrice: 499 },
+  { _id: '6a97bec9594177f07169d9a9', name: 'Appliance Repair', icon: '🔌', basePrice: 400 },
+  { _id: '6a97bec9594177f07169d9ab', name: 'Carpentry', icon: '🪚', basePrice: 450 },
+  { _id: '6a97bec9594177f07169d9ad', name: 'Painting', icon: '🎨', basePrice: 600 },
+  { _id: '6a97bec9594177f07169d9af', name: 'AC Repair', icon: '❄️', basePrice: 500 },
+  { _id: '6a97bec9594177f07169d9b1', name: 'Home Maintenance', icon: '🛠️', basePrice: 350 },
+];
+
 const CreateServiceRequest = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -15,7 +26,7 @@ const CreateServiceRequest = () => {
   const [preferredTime, setPreferredTime] = useState('10:00 AM - 01:00 PM');
   const [addressLine, setAddressLine] = useState('12 Rose Apartments, Andheri West');
   const [city, setCity] = useState('Mumbai');
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState(DEFAULT_CATEGORIES);
   const [selectedCategory, setSelectedCategory] = useState('');
 
   // AI Classification result state
@@ -28,7 +39,9 @@ const CreateServiceRequest = () => {
     const fetchCats = async () => {
       try {
         const res = await api.get('/categories');
-        if (res.data.success) setCategories(res.data.data.categories || []);
+        if (res.data.success && Array.isArray(res.data.data.categories) && res.data.data.categories.length > 0) {
+          setCategories(res.data.data.categories);
+        }
       } catch (err) {
         console.error('Failed to load categories:', err);
       }
@@ -48,8 +61,12 @@ const CreateServiceRequest = () => {
       if (res.data.success) {
         const classification = res.data.data.classification || res.data.data;
         setAiClassification(classification);
+        if (!title && classification.category) {
+          setTitle(`${classification.category} - ${classification.urgency || 'Standard'} Priority`);
+        }
         if (classification.category) {
-          const match = categories.find(
+          const list = categories.length > 0 ? categories : DEFAULT_CATEGORIES;
+          const match = list.find(
             (c) => c.name.toLowerCase() === classification.category.toLowerCase()
           );
           if (match) setSelectedCategory(match._id);
@@ -57,7 +74,7 @@ const CreateServiceRequest = () => {
       }
     } catch (err) {
       console.error('AI classification failed:', err);
-      setError('AI service error. You can still select category manually.');
+      setError('AI service error: ' + (err.response?.data?.message || err.message));
     } finally {
       setAiLoading(false);
     }
@@ -197,16 +214,60 @@ const CreateServiceRequest = () => {
 
         {/* Category manual selector */}
         <div>
-          <label className="block text-xs font-bold text-slate-800 mb-1">Service Category</label>
+          <div className="flex items-center justify-between mb-2">
+            <label className="block text-xs font-bold text-slate-800">
+              Service Category <span className="text-rose-500">*</span>
+            </label>
+            <span className="text-[11px] text-slate-500">
+              Select category or click 'Classify with AI' above
+            </span>
+          </div>
+
+          {/* Interactive Visual Category Cards Grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mb-3">
+            {categories.map((c) => {
+              const isSelected = selectedCategory === c._id;
+              return (
+                <button
+                  type="button"
+                  key={c._id}
+                  onClick={() => setSelectedCategory(c._id)}
+                  className={`p-3 rounded-2xl text-left border transition-all duration-200 flex flex-col justify-between ${
+                    isSelected
+                      ? 'bg-indigo-50/90 border-indigo-600 shadow-md shadow-indigo-600/10 ring-2 ring-indigo-500/20 -translate-y-0.5'
+                      : 'bg-white border-slate-200 hover:border-indigo-300 hover:bg-slate-50/60'
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-2xl">{c.icon || '🛠️'}</span>
+                    {isSelected && (
+                      <span className="w-5 h-5 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center text-[10px] shadow-sm">
+                        ✓
+                      </span>
+                    )}
+                  </div>
+                  <div className="mt-2">
+                    <span className={`block font-bold text-xs ${isSelected ? 'text-indigo-900' : 'text-slate-800'}`}>
+                      {c.name}
+                    </span>
+                    <span className="text-[10px] text-slate-500">
+                      From ₹{c.basePrice || 350}
+                    </span>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="w-full px-4 py-2.5 text-xs rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-white"
+            className="w-full px-4 py-2.5 text-xs font-medium text-slate-900 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-white"
           >
-            <option value="">Select Category</option>
+            <option value="" className="text-slate-500">-- Or select from dropdown --</option>
             {categories.map((c) => (
-              <option key={c._id} value={c._id}>
-                {c.name} (Base ₹{c.basePrice})
+              <option key={c._id} value={c._id} className="text-slate-900">
+                {c.icon || '🛠️'} {c.name} (Base ₹{c.basePrice})
               </option>
             ))}
           </select>
