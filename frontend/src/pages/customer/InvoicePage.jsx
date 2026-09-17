@@ -12,7 +12,7 @@ const InvoicePage = () => {
   useEffect(() => {
     const fetchInvoice = async () => {
       try {
-        const res = await api.get(`/invoices/${id}`);
+        const res = await api.get(`/invoices/booking/${id}`);
         if (res.data.success) setInvoice(res.data.data.invoice || res.data.data);
       } catch (err) {
         console.error('Failed to load invoice:', err);
@@ -45,7 +45,7 @@ const InvoicePage = () => {
       </div>
 
       {/* Printable Invoice Container */}
-      <div className="bg-white rounded-3xl p-8 border border-slate-200 shadow-lg space-y-8 print:border-none print:shadow-none">
+      <div className="cc-card rounded-3xl p-8 shadow-lg space-y-8 print:border-none print:shadow-none">
         <div className="flex items-center justify-between border-b border-slate-100 pb-6">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-bold text-xl">

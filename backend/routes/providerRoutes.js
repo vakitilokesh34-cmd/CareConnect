@@ -15,7 +15,6 @@ const { upload } = require('../middleware/upload');
 const router = express.Router();
 
 router.get('/', pagination, validate, listProviders);
-router.get('/:id', idParam(), validate, getProvider);
 
 // Protected provider-only routes
 router.get('/profile/me', authenticateUser, authorizeRoles(ROLES.SERVICE_PROVIDER), getProviderProfile);
@@ -39,5 +38,8 @@ router.get('/me/dashboard', authenticateUser, authorizeRoles(ROLES.SERVICE_PROVI
 router.post('/availability', authenticateUser, authorizeRoles(ROLES.SERVICE_PROVIDER), availabilityValidator, validate, addAvailability);
 router.get('/availability', authenticateUser, authorizeRoles(ROLES.SERVICE_PROVIDER), getAvailability);
 router.post('/documents', authenticateUser, authorizeRoles(ROLES.SERVICE_PROVIDER), upload.array('documents', 5), uploadDocuments);
+
+// Must be the last provider route so it does not shadow static paths like /profile/me
+router.get('/:id', idParam(), validate, getProvider);
 
 module.exports = router;

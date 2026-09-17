@@ -42,7 +42,7 @@ const OpsAssign = () => {
         await api.post('/bookings', {
           serviceRequest: requestId,
           provider: providerId,
-          quote: quoteRes.data.data._id,
+          quote: quoteRes.data.data.quote._id,
           scheduledStartTime: new Date(Date.now() + 86400000).toISOString(),
           scheduledEndTime: new Date(Date.now() + 86400000 + 7200000).toISOString(),
           totalPrice: 500,
@@ -66,13 +66,13 @@ const OpsAssign = () => {
       </div>
 
       {requests.length === 0 ? (
-        <div className="bg-white p-12 text-center rounded-2xl border border-slate-200 text-slate-400 text-xs">
+        <div className="cc-card p-12 text-center rounded-2xl text-slate-400 text-xs">
           No unassigned open requests.
         </div>
       ) : (
         <div className="space-y-4">
           {requests.map((req) => (
-            <div key={req._id} className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-3 text-xs">
+            <div key={req._id} className="cc-card rounded-2xl p-5 space-y-3 text-xs">
               <div className="flex items-center justify-between border-b border-slate-100 pb-2">
                 <h4 className="font-bold text-slate-900 text-sm">{req.title}</h4>
                 <span className="px-2.5 py-0.5 font-bold rounded bg-indigo-50 text-indigo-700">

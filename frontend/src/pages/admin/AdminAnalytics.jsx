@@ -32,17 +32,17 @@ const AdminAnalytics = () => {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-xs">
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-2">
+        <div className="cc-card p-5 rounded-2xl space-y-2">
           <span className="text-slate-500 font-semibold">Booking Completion Rate</span>
           <div className="text-3xl font-extrabold text-slate-900 font-display">92.5%</div>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-2">
+        <div className="cc-card p-5 rounded-2xl space-y-2">
           <span className="text-slate-500 font-semibold">Average Service Rating</span>
           <div className="text-3xl font-extrabold text-slate-900 font-display">4.85 ★</div>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-2">
+        <div className="cc-card p-5 rounded-2xl space-y-2">
           <span className="text-slate-500 font-semibold">Provider Utilization</span>
           <div className="text-3xl font-extrabold text-slate-900 font-display">84.0%</div>
         </div>

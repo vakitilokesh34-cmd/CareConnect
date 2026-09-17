@@ -77,7 +77,7 @@ const ProviderRecommendations = () => {
       {loading ? (
         <LoadingSpinner message="Calculating AI Match Scores for providers..." />
       ) : recommendations.length === 0 ? (
-        <div className="bg-white p-12 text-center rounded-2xl border border-slate-200 text-slate-400 text-xs">
+        <div className="cc-card p-12 text-center rounded-2xl text-slate-400 text-xs">
           No matching providers found for selected criteria.
         </div>
       ) : (

@@ -1,9 +1,9 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import {
-  LayoutDashboard, PlusCircle, ListOrdered, Sparkles, Calendar, FileText,
-  MessageSquare, Star, UserCheck, ShieldCheck, Tag, AlertOctagon, BarChart3,
-  CheckSquare, DollarSign, Clock, HelpCircle, Users, Activity, Settings
+  LayoutDashboard, PlusCircle, ListOrdered, Calendar, FileText,
+  UserCheck, ShieldCheck, Tag, AlertOctagon, BarChart3,
+  CheckSquare, DollarSign, Users, Activity, Settings
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
@@ -52,15 +52,15 @@ const Sidebar = () => {
   const navItems = roleNavItems[user.role] || [];
 
   return (
-    <aside className="w-64 bg-white border-r border-slate-200 shrink-0 hidden md:block min-h-[calc(100vh-4rem)] shadow-sm">
-      <div className="p-4 border-b border-slate-100 bg-slate-50/50">
+    <aside className="w-64 shrink-0 hidden md:block min-h-[calc(100vh-4rem)] m-3 mr-0 rounded-3xl cc-card">
+      <div className="p-4 border-b border-slate-200/60 bg-gradient-to-r from-indigo-50/60 to-transparent">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-indigo-600 text-white font-bold flex items-center justify-center text-sm shadow-md">
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 to-cyan-500 text-white font-bold flex items-center justify-center text-sm shadow-lg shadow-indigo-600/30 cc-pulse-ring">
             {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
           </div>
           <div className="overflow-hidden">
             <h3 className="font-semibold text-slate-800 text-xs truncate">{user.name}</h3>
-            <p className="text-[10px] text-slate-500 font-medium truncate uppercase tracking-wider">
+            <p className="text-[10px] text-indigo-600 font-medium truncate uppercase tracking-wider">
               {user.role.replace('_', ' ')}
             </p>
           </div>
@@ -68,22 +68,23 @@ const Sidebar = () => {
       </div>
 
       <nav className="p-3 space-y-1">
-        {navItems.map((item) => {
+        {navItems.map((item, i) => {
           const Icon = item.icon;
           return (
             <NavLink
               key={item.path}
               to={item.path}
               end={item.end}
+              style={{ animationDelay: `${i * 40}ms` }}
               className={({ isActive }) =>
-                `flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                `cc-rise flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all duration-300 group ${
                   isActive
-                    ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/25'
-                    : 'text-slate-600 hover:text-indigo-600 hover:bg-indigo-50/60'
+                    ? 'bg-gradient-to-r from-indigo-600 to-cyan-600 text-white shadow-lg shadow-indigo-600/30 -translate-y-0.5'
+                    : 'text-slate-600 hover:text-indigo-600 hover:bg-indigo-100/60 hover:-translate-x-0.5'
                 }`
               }
             >
-              <Icon className="w-4 h-4" />
+              <Icon className={`w-4 h-4 transition-transform duration-300 group-hover:scale-125 ${item.open ? '' : ''}`} />
               <span>{item.label}</span>
             </NavLink>
           );

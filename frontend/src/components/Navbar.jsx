@@ -18,38 +18,50 @@ const Navbar = () => {
     SUPPORT_AGENT: 'Support Agent',
   };
 
+  const profilePaths = {
+    CUSTOMER: '/dashboard/profile',
+    SERVICE_PROVIDER: '/dashboard/provider/profile',
+    PLATFORM_ADMIN: '/dashboard/admin',
+    OPERATIONS_MANAGER: '/dashboard/ops',
+    SUPPORT_AGENT: '/dashboard/support',
+  };
+  const profilePath = user?.role ? profilePaths[user.role] || '/dashboard' : '/dashboard';
+
   const handleLogout = () => {
     logout();
     navigate('/login');
   };
 
   return (
-    <nav className="bg-slate-900 border-b border-slate-800 text-white sticky top-0 z-40 backdrop-blur-md bg-opacity-95">
+    <nav className="bg-slate-950/85 border-b border-indigo-900/60 text-white sticky top-0 z-40 backdrop-blur-2xl supports-[backdrop-filter]:bg-slate-950/60 shadow-lg shadow-indigo-950/40">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex items-center gap-3">
             <Link to="/" className="flex items-center gap-2 group">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-cyan-400 flex items-center justify-center shadow-lg shadow-indigo-500/25 group-hover:scale-105 transition-transform">
+              <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-cyan-400 flex items-center justify-center shadow-lg shadow-indigo-500/40 cc-float group-hover:scale-110 transition-transform">
                 <ShieldCheck className="w-6 h-6 text-white" />
               </div>
               <span className="text-xl font-bold font-display tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent">
-                Care<span className="text-indigo-400">Connect</span>
+                Care<span className="cc-gradient-text">Connect</span>
               </span>
             </Link>
           </div>
 
           {/* Center Links (Desktop) */}
           <div className="hidden md:flex items-center gap-6 text-sm font-medium text-slate-300">
-            <Link to="/" className="hover:text-white transition-colors">
+            <Link to="/" className="relative hover:text-white transition-colors group">
               Home
+              <span className="absolute -bottom-1.5 left-0 h-0.5 w-0 bg-gradient-to-r from-indigo-400 to-cyan-400 transition-all duration-300 group-hover:w-full" />
             </Link>
-            <Link to="/services" className="hover:text-white transition-colors">
+            <Link to="/services" className="relative hover:text-white transition-colors group">
               Services
+              <span className="absolute -bottom-1.5 left-0 h-0.5 w-0 bg-gradient-to-r from-indigo-400 to-cyan-400 transition-all duration-300 group-hover:w-full" />
             </Link>
-            <Link to="/providers" className="hover:text-white transition-colors flex items-center gap-1.5">
+            <Link to="/providers" className="relative hover:text-white transition-colors group flex items-center gap-1.5">
               <Sparkles className="w-4 h-4 text-cyan-400" />
               Find Providers
+              <span className="absolute -bottom-1.5 left-0 h-0.5 w-0 bg-gradient-to-r from-indigo-400 to-cyan-400 transition-all duration-300 group-hover:w-full" />
             </Link>
           </div>
 
@@ -62,7 +74,7 @@ const Navbar = () => {
                 {/* Dashboard button */}
                 <Link
                   to="/dashboard"
-                  className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-indigo-600/30 hover:bg-indigo-600/50 border border-indigo-500/40 text-xs font-semibold text-indigo-300 hover:text-white transition-all"
+                  className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-indigo-600/30 hover:bg-indigo-600/60 border border-indigo-500/40 text-xs font-semibold text-indigo-200 hover:text-white transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-indigo-500/30"
                 >
                   <LayoutDashboard className="w-4 h-4" />
                   Dashboard
@@ -72,22 +84,22 @@ const Navbar = () => {
                 <div className="relative">
                   <button
                     onClick={() => setProfileOpen(!profileOpen)}
-                    className="flex items-center gap-2.5 p-1.5 rounded-xl hover:bg-slate-800 transition-colors"
+                    className="flex items-center gap-2.5 p-1.5 rounded-xl hover:bg-slate-800/70 transition-colors"
                   >
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-cyan-500 flex items-center justify-center font-bold text-xs text-white shadow-inner">
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-cyan-500 flex items-center justify-center font-bold text-xs text-white shadow-inner cc-pulse-ring">
                       {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
                     </div>
                     <div className="hidden lg:block text-left">
                       <p className="text-xs font-semibold text-white leading-tight">{user.name}</p>
-                      <p className="text-[10px] text-indigo-400 font-medium">
+                      <p className="text-[10px] text-cyan-400 font-medium">
                         {roleLabels[user.role] || user.role}
                       </p>
                     </div>
-                    <ChevronDown className="w-4 h-4 text-slate-400" />
+                    <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform duration-300 ${profileOpen ? 'rotate-180' : ''}`} />
                   </button>
 
                   {profileOpen && (
-                    <div className="absolute right-0 mt-2 w-52 bg-slate-850 rounded-2xl shadow-2xl border border-slate-800 py-2 z-50 animate-fade-in text-slate-200 text-sm">
+                    <div className="absolute right-0 mt-2 w-52 rounded-2xl shadow-2xl border border-indigo-900/50 py-2 z-50 animate-fade-in text-slate-200 text-sm bg-slate-900/95 backdrop-blur-xl">
                       <div className="px-4 py-2 border-b border-slate-800">
                         <p className="font-semibold text-white truncate">{user.name}</p>
                         <p className="text-xs text-slate-400 truncate">{user.email}</p>
@@ -105,7 +117,7 @@ const Navbar = () => {
                         Dashboard
                       </Link>
                       <Link
-                        to="/dashboard/profile"
+                        to={profilePath}
                         onClick={() => setProfileOpen(false)}
                         className="flex items-center gap-2.5 px-4 py-2.5 hover:bg-slate-800 transition-colors"
                       >
@@ -136,7 +148,7 @@ const Navbar = () => {
                 </Link>
                 <Link
                   to="/register"
-                  className="px-4 py-2 rounded-xl text-xs font-semibold bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-600/30 transition-all"
+                  className="px-4 py-2 rounded-xl text-xs font-semibold text-white cc-btn-glow"
                 >
                   Register
                 </Link>

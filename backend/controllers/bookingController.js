@@ -38,7 +38,8 @@ const createBooking = asyncHandler(async (req, res) => {
 
   const request = await ServiceRequest.findById(serviceRequest);
   if (!request) throw ApiError.notFound('Service request');
-  if (request.customer.toString() !== req.user._id.toString()) {
+  const isStaff = ['PLATFORM_ADMIN', 'OPERATIONS_MANAGER'].includes(req.user.role);
+  if (!isStaff && request.customer.toString() !== req.user._id.toString()) {
     throw ApiError.forbidden('You can only book on your own service requests');
   }
   if (request.status === 'BOOKED') throw ApiError.badRequest('This request already has a booking');

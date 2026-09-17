@@ -9,7 +9,7 @@ const {
 
 const router = express.Router();
 
-router.post('/', authenticateUser, authorizeRoles(ROLES.SERVICE_PROVIDER), quoteValidator, validate, createQuote);
+router.post('/', authenticateUser, authorizeRoles(ROLES.SERVICE_PROVIDER, ROLES.OPERATIONS_MANAGER, ROLES.PLATFORM_ADMIN), quoteValidator, validate, createQuote);
 router.get('/request/:requestId', authenticateUser, idParam('requestId'), validate, listQuotesForRequest);
 router.get('/my', authenticateUser, authorizeRoles(ROLES.SERVICE_PROVIDER), pagination, validate, listMyQuotes);
 router.get('/:id', authenticateUser, idParam(), validate, getQuote);

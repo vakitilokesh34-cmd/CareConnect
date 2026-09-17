@@ -12,7 +12,7 @@ const SearchFilters = ({
   onReset,
 }) => {
   return (
-    <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm space-y-4">
+    <div className="cc-card rounded-2xl p-4 space-y-4">
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         {/* Search input */}
         <div className="relative sm:col-span-1">
@@ -35,7 +35,7 @@ const SearchFilters = ({
           >
             <option value="">All Service Categories</option>
             {categories.map((c) => (
-              <option key={c._id || c.name} value={c.name}>
+              <option key={c._id || c.name} value={c._id || c.name}>
                 {c.name}
               </option>
             ))}

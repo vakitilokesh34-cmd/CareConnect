@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Search, Sparkles, Wrench } from 'lucide-react';
+import { Search, Sparkles } from 'lucide-react';
 import api from '../services/api';
 import ServiceCategoryCard from '../components/ServiceCategoryCard';
 import LoadingSpinner from '../components/LoadingSpinner';
@@ -28,21 +28,22 @@ const ServicesPage = () => {
   const filtered = categories.filter(
     (c) =>
       c.name.toLowerCase().includes(search.toLowerCase()) ||
-      c.description.toLowerCase().includes(search.toLowerCase())
+      (c.description || '').toLowerCase().includes(search.toLowerCase())
   );
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
       {/* Header */}
-      <div className="bg-slate-900 text-white p-8 rounded-3xl space-y-4 shadow-xl border border-slate-800">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 text-xs font-semibold">
-          <Sparkles className="w-4 h-4 text-cyan-400" />
+      <div className="cc-card p-8 rounded-3xl space-y-4 shadow-xl border border-indigo-300/40 relative overflow-hidden">
+        <div className="absolute -top-24 -right-24 w-72 h-72 bg-indigo-400/25 rounded-full blur-3xl cc-spin-slow" />
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-300/40 text-indigo-700 text-xs font-semibold relative">
+          <Sparkles className="w-4 h-4 text-cyan-600" />
           <span>Home Service Catalog</span>
         </div>
-        <h1 className="text-3xl sm:text-4xl font-extrabold font-display">
+        <h1 className="text-3xl sm:text-4xl font-extrabold font-display cc-gradient-text relative">
           Explore All Home Services
         </h1>
-        <p className="text-slate-300 text-sm max-w-2xl">
+        <p className="text-slate-600 text-sm max-w-2xl relative">
           Browse verified categories from plumbing to electrical work and appliance repair. Select a category to find expert service providers.
         </p>
 
@@ -54,7 +55,7 @@ const ServicesPage = () => {
             placeholder="Search category (e.g. Plumbing, AC, Cleaning)..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 bg-slate-800 text-white rounded-xl text-xs border border-slate-700 focus:ring-2 focus:ring-indigo-500 focus:outline-none placeholder-slate-400"
+            className="w-full pl-10 pr-4 py-2.5 bg-white/90 text-slate-900 rounded-xl text-xs cc-input placeholder-slate-400"
           />
         </div>
       </div>

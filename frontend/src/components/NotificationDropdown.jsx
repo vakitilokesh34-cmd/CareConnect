@@ -33,7 +33,7 @@ const NotificationDropdown = () => {
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="relative p-2 text-slate-600 hover:text-indigo-600 hover:bg-slate-100 rounded-xl transition-colors"
+        className="relative p-2 text-slate-300 hover:text-white hover:bg-slate-800/70 rounded-xl transition-all hover:-translate-y-0.5"
         title="Notifications"
       >
         <Bell className="w-5 h-5" />
@@ -45,7 +45,7 @@ const NotificationDropdown = () => {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-white rounded-2xl shadow-xl border border-slate-100 z-50 overflow-hidden animate-fade-in">
+        <div className="absolute right-0 mt-2 w-80 sm:w-96 cc-card rounded-2xl shadow-xl z-50 overflow-hidden animate-fade-in">
           <div className="p-3 bg-slate-50 border-b border-slate-100 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <h4 className="font-semibold text-slate-800 text-sm">Notifications</h4>

@@ -21,24 +21,34 @@ const createQuote = asyncHandler(async (req, res) => {
   }
 
   const profile = await ProviderProfile.findOne({ user: req.user._id });
-  if (!profile) throw ApiError.notFound('Provider profile');
-  if (profile.verificationStatus !== 'VERIFIED') {
-    throw ApiError.forbidden('Only verified providers can submit quotes');
+  const isStaff = ['PLATFORM_ADMIN', 'OPERATIONS_MANAGER'].includes(req.user.role);
+  let assignedProfile;
+
+  if (isStaff) {
+    if (!req.body.provider) throw ApiError.badRequest('provider is required for staff-created quotes');
+    assignedProfile = await ProviderProfile.findById(req.body.provider);
+    if (!assignedProfile) throw ApiError.notFound('Provider profile');
+  } else {
+    if (!profile) throw ApiError.notFound('Provider profile');
+    if (profile.verificationStatus !== 'VERIFIED') {
+      throw ApiError.forbidden('Only verified providers can submit quotes');
+    }
+    assignedProfile = profile;
   }
 
   const isMatched = request.aiMatchedProviders.some(
-    (p) => p && p.toString() === profile._id.toString()
+    (p) => p && p.toString() === assignedProfile._id.toString()
   );
-  if (!isMatched && !['PLATFORM_ADMIN', 'OPERATIONS_MANAGER'].includes(req.user.role)) {
+  if (!isMatched && !isStaff) {
     throw ApiError.forbidden('You are not matched to this request');
   }
 
-  const existing = await Quote.findOne({ serviceRequest, provider: profile._id });
+  const existing = await Quote.findOne({ serviceRequest, provider: assignedProfile._id });
   if (existing) throw ApiError.conflict('You have already submitted a quote for this request');
 
   const quote = await Quote.create({
     serviceRequest,
-    provider: profile._id,
+    provider: assignedProfile._id,
     estimatedPrice,
     description,
     estimatedDuration,
@@ -49,7 +59,7 @@ const createQuote = asyncHandler(async (req, res) => {
     await request.save();
   }
 
-  await notifyCustomerOfQuote(request.customer, quote._id, profile.businessName, estimatedPrice);
+  await notifyCustomerOfQuote(request.customer, quote._id, assignedProfile.businessName, estimatedPrice);
 
   const populated = await Quote.findById(quote._id).populate(PROVIDER_POPULATE);
   res.status(201).json(ApiResponse.created('Quote submitted', { quote: populated }));

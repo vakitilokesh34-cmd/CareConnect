@@ -34,12 +34,12 @@ const ProviderDetailsPage = () => {
   }, [id]);
 
   if (loading) return <LoadingSpinner message="Loading provider details..." />;
-  if (!provider) return <div className="p-8 text-center text-slate-500">Provider not found</div>;
+  if (!provider) return <div className="p-8 text-center text-slate-200">Provider not found</div>;
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
       {/* Header Banner */}
-      <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm flex flex-col md:flex-row items-start justify-between gap-6">
+      <div className="cc-card rounded-3xl p-6 sm:p-8 flex flex-col md:flex-row items-start justify-between gap-6">
         <div className="flex items-start gap-5">
           <div className="w-20 h-20 rounded-2xl bg-gradient-to-tr from-indigo-600 to-cyan-500 text-white font-bold flex items-center justify-center text-3xl shadow-lg shrink-0">
             {provider.businessName?.charAt(0) || provider.user?.name?.charAt(0) || 'P'}
@@ -94,7 +94,7 @@ const ProviderDetailsPage = () => {
       {/* Description & Skills */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="md:col-span-2 space-y-6">
-          <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-3">
+          <div className="cc-card rounded-2xl p-6 space-y-3">
             <h3 className="font-bold text-slate-900 text-base">About {provider.businessName}</h3>
             <p className="text-xs text-slate-600 leading-relaxed font-medium">
               {provider.description || 'Experienced professional with high standards of customer service and quality craftsmanship.'}
@@ -102,7 +102,7 @@ const ProviderDetailsPage = () => {
           </div>
 
           {/* Reviews section */}
-          <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
+          <div className="cc-card rounded-2xl p-6 space-y-4">
             <h3 className="font-bold text-slate-900 text-base">Customer Reviews ({reviews.length})</h3>
             {reviews.length === 0 ? (
               <p className="text-xs text-slate-400">No reviews submitted yet.</p>
@@ -118,7 +118,7 @@ const ProviderDetailsPage = () => {
 
         {/* Sidebar details */}
         <div className="space-y-6">
-          <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
+          <div className="cc-card rounded-2xl p-6 space-y-4">
             <h3 className="font-bold text-slate-900 text-sm">Skills & Expertise</h3>
             <div className="flex flex-wrap gap-1.5">
               {(provider.skills || []).map((skill, idx) => (
@@ -129,7 +129,7 @@ const ProviderDetailsPage = () => {
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-3">
+          <div className="cc-card rounded-2xl p-6 space-y-3">
             <h3 className="font-bold text-slate-900 text-sm">Service Areas</h3>
             <div className="space-y-2 text-xs text-slate-600">
               {(provider.serviceAreas || []).map((area, idx) => (

@@ -19,7 +19,7 @@ const ProviderRecommendationCard = ({ recommendation, onSelectQuoteRequest }) =>
     "Recommended because this provider matches all required skills, operates in your area, and maintains a high customer rating.";
 
   return (
-    <div className="bg-white rounded-2xl p-5 border-2 border-indigo-100 shadow-lg hover:shadow-xl transition-all relative overflow-hidden">
+    <div className="cc-card rounded-2xl p-5 border-2 border-indigo-100 relative overflow-hidden">
       {/* AI recommendation badge */}
       <div className="absolute top-0 right-0 bg-gradient-to-l from-indigo-600 to-cyan-600 text-white text-[10px] font-bold px-3.5 py-1 rounded-bl-xl shadow flex items-center gap-1">
         <Sparkles className="w-3 h-3 text-cyan-300" />

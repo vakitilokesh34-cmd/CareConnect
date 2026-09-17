@@ -19,7 +19,7 @@ const ProviderProfileMgmt = () => {
 
   const fetchProfile = async () => {
     try {
-      const res = await api.get('/providers/profile');
+      const res = await api.get('/providers/profile/me');
       if (res.data.success) {
         const p = res.data.data.provider || res.data.data;
         setProfile(p);
@@ -82,7 +82,7 @@ const ProviderProfileMgmt = () => {
         </span>
       </div>
 
-      <form onSubmit={handleSubmit} className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-5 text-xs">
+      <form onSubmit={handleSubmit} className="cc-card rounded-3xl p-6 space-y-5 text-xs">
         <div>
           <label className="block font-bold text-slate-800 mb-1">Business Name</label>
           <input

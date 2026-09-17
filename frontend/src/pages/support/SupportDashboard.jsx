@@ -38,7 +38,7 @@ const SupportDashboard = () => {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+        <div className="cc-card p-5 rounded-2xl flex items-center justify-between">
           <div>
             <span className="text-xs font-semibold text-slate-500 block">Pending Disputes</span>
             <span className="text-2xl font-extrabold text-slate-900 font-display">{openDisputes.length}</span>
@@ -48,7 +48,7 @@ const SupportDashboard = () => {
           </div>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+        <div className="cc-card p-5 rounded-2xl flex items-center justify-between">
           <div>
             <span className="text-xs font-semibold text-slate-500 block">Resolved Disputes</span>
             <span className="text-2xl font-extrabold text-slate-900 font-display">
@@ -60,7 +60,7 @@ const SupportDashboard = () => {
           </div>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+        <div className="cc-card p-5 rounded-2xl flex items-center justify-between">
           <div>
             <span className="text-xs font-semibold text-slate-500 block">Resolution Speed SLA</span>
             <span className="text-2xl font-extrabold text-indigo-600 font-display">&lt; 4 hrs</span>

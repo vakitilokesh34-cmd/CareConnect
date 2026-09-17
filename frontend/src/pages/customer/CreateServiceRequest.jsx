@@ -91,7 +91,7 @@ const CreateServiceRequest = () => {
 
       const res = await api.post('/requests', payload);
       if (res.data.success) {
-        navigate('/dashboard/requests');
+        navigate('/dashboard/customer/requests');
       }
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to create request.');
@@ -115,7 +115,7 @@ const CreateServiceRequest = () => {
 
       {error && <ErrorMessage message={error} />}
 
-      <form onSubmit={handleSubmit} className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-6">
+      <form onSubmit={handleSubmit} className="cc-card rounded-3xl p-6 sm:p-8 space-y-6">
         {/* Title */}
         <div>
           <label className="block text-xs font-bold text-slate-800 mb-1">Request Title (Optional)</label>

@@ -57,7 +57,7 @@ const UserManagement = () => {
         </select>
       </div>
 
-      <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm text-xs">
+      <div className="cc-card rounded-2xl overflow-hidden shadow-sm text-xs">
         <table className="w-full text-left">
           <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200">
             <tr>

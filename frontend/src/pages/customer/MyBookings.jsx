@@ -62,7 +62,7 @@ const MyBookings = () => {
           <h2 className="font-display text-xl font-extrabold text-slate-950">Bookings</h2>
           <p className="mt-1 text-xs text-slate-500">Choose a service to see its live status and next action.</p>
         </div>
-        <div className="flex w-full items-center gap-1 overflow-x-auto rounded-2xl border border-slate-200 bg-white p-1.5 text-xs font-semibold sm:w-auto">
+        <div className="flex w-full items-center gap-1 overflow-x-auto cc-card rounded-2xl p-1.5 text-xs font-semibold sm:w-auto">
           {['ALL', 'ACTIVE', 'COMPLETED', 'CANCELLED'].map((tab) => (
             <button
               key={tab}
@@ -78,7 +78,7 @@ const MyBookings = () => {
       </div>
 
       {filtered.length === 0 ? (
-        <div className="rounded-3xl border border-dashed border-slate-300 bg-white p-12 text-center">
+        <div className="cc-card rounded-3xl border border-dashed p-12 text-center">
           <CalendarDays className="mx-auto h-9 w-9 text-indigo-300" />
           <h3 className="mt-4 font-display text-lg font-bold text-slate-900">Nothing here just yet</h3>
           <p className="mx-auto mt-2 max-w-sm text-xs leading-relaxed text-slate-500">When you accept a provider’s quote, your booking and its live progress will appear here.</p>

@@ -3,6 +3,14 @@ import { Calendar, Clock, MapPin, ChevronRight, Sparkles } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const BookingCard = ({ booking, userRole }) => {
+  const detailPath =
+    userRole === 'SERVICE_PROVIDER'
+      ? null
+      : userRole === 'OPERATIONS_MANAGER'
+      ? '/dashboard/ops/bookings'
+      : userRole === 'PLATFORM_ADMIN'
+      ? '/dashboard/admin'
+      : `/dashboard/customer/bookings/${booking._id}`;
   const statusColors = {
     PENDING: 'bg-amber-100 text-amber-800 border-amber-200',
     CONFIRMED: 'bg-blue-100 text-blue-800 border-blue-200',
@@ -16,8 +24,8 @@ const BookingCard = ({ booking, userRole }) => {
   };
 
   return (
-    <article className="group relative overflow-hidden rounded-3xl border border-slate-200/80 bg-white p-5 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-indigo-200 hover:shadow-xl hover:shadow-indigo-950/10">
-      <div className="absolute right-0 top-0 h-24 w-24 -translate-y-8 translate-x-8 rounded-full bg-indigo-100/70 blur-2xl transition group-hover:bg-cyan-100" />
+    <article className="cc-card group relative overflow-hidden rounded-3xl p-5">
+      <div className="absolute right-0 top-0 h-24 w-24 -translate-y-8 translate-x-8 rounded-full bg-indigo-200/50 blur-2xl transition group-hover:bg-cyan-200/60" />
       <div className="relative flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-slate-100">
         <div>
           <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400">Booking ID</span>
@@ -73,13 +81,19 @@ const BookingCard = ({ booking, userRole }) => {
           <span className="text-lg font-bold text-slate-900 font-display">₹{booking.totalPrice}</span>
         </div>
 
-        <Link
-          to={`/dashboard/customer/bookings/${booking._id}`}
-          className="px-4 py-2.5 bg-slate-950 hover:bg-indigo-600 text-white rounded-2xl text-xs font-semibold transition-all flex items-center gap-1.5"
-        >
-          Manage Booking
-          <ChevronRight className="w-4 h-4" />
-        </Link>
+        {detailPath ? (
+          <Link
+            to={detailPath}
+            className="px-4 py-2.5 bg-slate-950 hover:bg-indigo-600 text-white rounded-2xl text-xs font-semibold transition-all flex items-center gap-1.5"
+          >
+            Manage Booking
+            <ChevronRight className="w-4 h-4" />
+          </Link>
+        ) : (
+          <span className="px-4 py-2.5 bg-slate-900/50 text-slate-300 rounded-2xl text-xs font-semibold border border-slate-200 text-center">
+            View job on your dashboard
+          </span>
+        )}
       </div>
     </article>
   );

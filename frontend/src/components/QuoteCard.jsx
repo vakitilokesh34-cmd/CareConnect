@@ -12,7 +12,7 @@ const QuoteCard = ({ quote, onSelectQuote, isSelected = false, disabled = false 
 
   return (
     <div
-      className={`bg-white rounded-2xl p-5 border transition-all ${
+      className={`cc-card rounded-2xl p-5 border transition-all ${
         isSelected
           ? 'border-2 border-indigo-600 ring-4 ring-indigo-50 shadow-xl'
           : 'border-slate-200 shadow-sm hover:border-indigo-300'

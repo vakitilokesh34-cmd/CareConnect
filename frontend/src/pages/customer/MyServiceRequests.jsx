@@ -92,13 +92,13 @@ const MyServiceRequests = () => {
       </div>
 
       {requests.length === 0 ? (
-        <div className="bg-white p-12 text-center rounded-2xl border border-slate-200 text-slate-400 text-xs">
+        <div className="cc-card p-12 text-center rounded-2xl text-slate-400 text-xs">
           No service requests created yet.
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-4">
           {requests.map((req) => (
-            <div key={req._id} className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-3">
+            <div key={req._id} className="cc-card rounded-2xl p-5 space-y-3">
               <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-100">
                 <div className="flex items-center gap-2">
                   <span className="px-2.5 py-1 bg-indigo-50 text-indigo-700 text-xs font-bold rounded-lg border border-indigo-100">
@@ -158,7 +158,7 @@ const MyServiceRequests = () => {
       {/* Quotes Modal */}
       {selectedReq && (
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-2xl w-full p-6 shadow-2xl border border-slate-100 max-h-[90vh] overflow-y-auto space-y-6">
+          <div className="cc-card rounded-3xl max-w-2xl w-full p-6 shadow-2xl max-h-[90vh] overflow-y-auto space-y-6">
             <div className="flex items-center justify-between pb-4 border-b border-slate-100">
               <div>
                 <h3 className="font-bold text-slate-900 text-lg">Compare Quotes</h3>

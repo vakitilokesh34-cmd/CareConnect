@@ -63,7 +63,7 @@ const CustomerDashboard = () => {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+        <div className="cc-card p-5 rounded-2xl flex items-center justify-between">
           <div>
             <span className="text-xs font-semibold text-slate-500 block">Open Requests</span>
             <span className="text-2xl font-extrabold text-slate-900 font-display">{openRequests.length}</span>
@@ -73,7 +73,7 @@ const CustomerDashboard = () => {
           </div>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+        <div className="cc-card p-5 rounded-2xl flex items-center justify-between">
           <div>
             <span className="text-xs font-semibold text-slate-500 block">Active Bookings</span>
             <span className="text-2xl font-extrabold text-slate-900 font-display">{activeBookings.length}</span>
@@ -83,7 +83,7 @@ const CustomerDashboard = () => {
           </div>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+        <div className="cc-card p-5 rounded-2xl flex items-center justify-between">
           <div>
             <span className="text-xs font-semibold text-slate-500 block">Completed Bookings</span>
             <span className="text-2xl font-extrabold text-slate-900 font-display">
@@ -106,7 +106,7 @@ const CustomerDashboard = () => {
         </div>
 
         {activeBookings.length === 0 ? (
-          <div className="bg-white p-8 rounded-2xl border border-slate-200 text-center text-slate-400 text-xs">
+          <div className="cc-card p-8 rounded-2xl text-center text-slate-400 text-xs">
             No active bookings right now. Create a new service request to hire a provider.
           </div>
         ) : (
@@ -128,11 +128,11 @@ const CustomerDashboard = () => {
         </div>
 
         {requests.length === 0 ? (
-          <div className="bg-white p-8 rounded-2xl border border-slate-200 text-center text-slate-400 text-xs">
+          <div className="cc-card p-8 rounded-2xl text-center text-slate-400 text-xs">
             No requests created yet.
           </div>
         ) : (
-          <div className="bg-white rounded-2xl border border-slate-200 divide-y divide-slate-100 overflow-hidden">
+          <div className="cc-card rounded-2xl divide-y divide-slate-100 overflow-hidden">
             {requests.slice(0, 5).map((req) => (
               <div key={req._id} className="p-4 flex items-center justify-between gap-4 hover:bg-slate-50 transition-colors">
                 <div>
@@ -150,7 +150,7 @@ const CustomerDashboard = () => {
                     {req.status?.replace('_', ' ')}
                   </span>
                   <Link
-                    to={`/dashboard/requests`}
+                    to={`/dashboard/customer/requests`}
                     className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl"
                   >
                     View Quotes

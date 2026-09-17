@@ -43,7 +43,7 @@ const OpsDashboard = () => {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+        <div className="cc-card p-5 rounded-2xl flex items-center justify-between">
           <div>
             <span className="text-xs font-semibold text-slate-500 block">Active In-Progress Jobs</span>
             <span className="text-2xl font-extrabold text-slate-900 font-display">{activeJobs.length}</span>
@@ -53,7 +53,7 @@ const OpsDashboard = () => {
           </div>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+        <div className="cc-card p-5 rounded-2xl flex items-center justify-between">
           <div>
             <span className="text-xs font-semibold text-slate-500 block">Completed Jobs</span>
             <span className="text-2xl font-extrabold text-slate-900 font-display">
@@ -65,7 +65,7 @@ const OpsDashboard = () => {
           </div>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+        <div className="cc-card p-5 rounded-2xl flex items-center justify-between">
           <div>
             <span className="text-xs font-semibold text-slate-500 block">Completion SLA Rate</span>
             <span className="text-2xl font-extrabold text-indigo-600 font-display">96.8%</span>

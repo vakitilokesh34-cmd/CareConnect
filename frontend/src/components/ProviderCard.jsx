@@ -6,7 +6,7 @@ const ProviderCard = ({ provider, onSelect }) => {
   const isVerified = provider.verificationStatus === 'VERIFIED';
 
   return (
-    <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm hover:shadow-xl hover:border-indigo-200 transition-all duration-300 flex flex-col justify-between">
+    <div className="cc-card rounded-2xl p-5 hover:shadow-xl hover:border-indigo-200 transition-all duration-300 flex flex-col justify-between">
       <div>
         <div className="flex items-start justify-between gap-3 mb-3">
           <div className="flex items-center gap-3">

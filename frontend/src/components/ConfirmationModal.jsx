@@ -20,7 +20,7 @@ const ConfirmationModal = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-fade-in">
-      <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-100">
+      <div className="cc-card rounded-2xl max-w-md w-full p-6 shadow-2xl">
         <div className="flex items-center justify-between pb-3 border-b border-slate-100">
           <div className="flex items-center gap-2">
             <AlertCircle className={`w-5 h-5 ${type === 'danger' ? 'text-rose-600' : 'text-indigo-600'}`} />

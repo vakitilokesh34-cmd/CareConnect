@@ -40,7 +40,7 @@ const AdminDashboard = () => {
 
       {/* Metrics Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+        <div className="cc-card p-5 rounded-2xl flex items-center justify-between">
           <div>
             <span className="text-xs font-semibold text-slate-500 block">Total Registered Users</span>
             <span className="text-2xl font-extrabold text-slate-900 font-display">{s.total || 18}</span>
@@ -51,7 +51,7 @@ const AdminDashboard = () => {
           </div>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+        <div className="cc-card p-5 rounded-2xl flex items-center justify-between">
           <div>
             <span className="text-xs font-semibold text-slate-500 block">Verified Providers</span>
             <span className="text-2xl font-extrabold text-slate-900 font-display">{s.verifiedProviders || 8}</span>
@@ -62,7 +62,7 @@ const AdminDashboard = () => {
           </div>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+        <div className="cc-card p-5 rounded-2xl flex items-center justify-between">
           <div>
             <span className="text-xs font-semibold text-slate-500 block">Total Bookings</span>
             <span className="text-2xl font-extrabold text-slate-900 font-display">{b.total || 8}</span>
@@ -73,7 +73,7 @@ const AdminDashboard = () => {
           </div>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+        <div className="cc-card p-5 rounded-2xl flex items-center justify-between">
           <div>
             <span className="text-xs font-semibold text-slate-500 block">Open Disputes</span>
             <span className="text-2xl font-extrabold text-slate-900 font-display">{stats?.disputes?.open || 1}</span>

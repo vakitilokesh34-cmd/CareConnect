@@ -37,7 +37,7 @@ const MyQuotes = () => {
       </div>
 
       {quotes.length === 0 ? (
-        <div className="bg-white p-12 text-center rounded-3xl border border-dashed border-slate-300 text-slate-400 text-xs">
+        <div className="cc-card p-12 text-center rounded-3xl border border-dashed text-slate-400 text-xs">
           <FileText className="mx-auto h-8 w-8 text-indigo-300" />
           <p className="mt-3">No quotes submitted yet.</p>
           <Link to="/dashboard/provider/requests" className="mt-4 inline-flex items-center gap-2 font-bold text-indigo-600"><Send className="h-3.5 w-3.5" /> Browse requests</Link>
@@ -45,7 +45,7 @@ const MyQuotes = () => {
       ) : (
         <div className="grid grid-cols-1 gap-4">
           {quotes.map((q) => (
-            <div key={q._id} className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-3">
+            <div key={q._id} className="cc-card rounded-2xl p-5 space-y-3">
               <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                 <span className="font-bold text-slate-900 text-xs">
                   {q.serviceRequest?.title || 'Service Request Quote'}

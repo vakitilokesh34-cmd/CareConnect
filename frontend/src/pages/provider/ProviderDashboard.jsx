@@ -19,7 +19,7 @@ const ProviderDashboard = () => {
   const fetchProviderData = async () => {
     try {
       const [pRes, bRes] = await Promise.all([
-        api.get('/providers/profile'),
+        api.get('/providers/profile/me'),
         api.get('/bookings'),
       ]);
       if (pRes.data.success) setProfile(pRes.data.data.provider || pRes.data.data.user);
@@ -53,7 +53,7 @@ const ProviderDashboard = () => {
 
         <div className="flex items-center gap-3">
           <Link
-            to="/dashboard/incoming-requests"
+            to="/dashboard/provider/requests"
             className="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-xl shadow-lg transition-all"
           >
             View Incoming Requests
@@ -63,7 +63,7 @@ const ProviderDashboard = () => {
 
       {/* Provider Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-4 gap-6">
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+        <div className="cc-card p-5 rounded-2xl flex items-center justify-between">
           <div>
             <span className="text-xs font-semibold text-slate-500 block">Active Jobs</span>
             <span className="text-2xl font-extrabold text-slate-900 font-display">{activeJobs.length}</span>
@@ -73,7 +73,7 @@ const ProviderDashboard = () => {
           </div>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+        <div className="cc-card p-5 rounded-2xl flex items-center justify-between">
           <div>
             <span className="text-xs font-semibold text-slate-500 block">Completed Jobs</span>
             <span className="text-2xl font-extrabold text-slate-900 font-display">{profile?.completedJobs || 0}</span>
@@ -83,7 +83,7 @@ const ProviderDashboard = () => {
           </div>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+        <div className="cc-card p-5 rounded-2xl flex items-center justify-between">
           <div>
             <span className="text-xs font-semibold text-slate-500 block">Average Rating</span>
             <span className="text-2xl font-extrabold text-slate-900 font-display flex items-center gap-1">
@@ -96,7 +96,7 @@ const ProviderDashboard = () => {
           </div>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+        <div className="cc-card p-5 rounded-2xl flex items-center justify-between">
           <div>
             <span className="text-xs font-semibold text-slate-500 block">Base Job Rate</span>
             <span className="text-2xl font-extrabold text-slate-900 font-display">₹{profile?.pricing?.baseRate || 400}</span>
@@ -111,13 +111,13 @@ const ProviderDashboard = () => {
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="font-bold text-slate-900 text-lg font-display">Active Customer Jobs</h2>
-          <Link to="/dashboard/active-jobs" className="text-xs font-semibold text-indigo-600 hover:underline flex items-center gap-1">
+          <Link to="/dashboard/provider/jobs" className="text-xs font-semibold text-indigo-600 hover:underline flex items-center gap-1">
             View all active jobs <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
 
         {activeJobs.length === 0 ? (
-          <div className="bg-white p-8 rounded-2xl border border-slate-200 text-center text-slate-400 text-xs">
+          <div className="cc-card p-8 rounded-2xl text-center text-slate-400 text-xs">
             No active jobs. Check incoming service requests to submit quotes.
           </div>
         ) : (

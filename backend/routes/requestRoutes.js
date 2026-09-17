@@ -23,7 +23,7 @@ router.post(
 router.get(
   '/',
   authenticateUser,
-  authorizeRoles(ROLES.CUSTOMER, ROLES.SUPPORT_AGENT, ROLES.PLATFORM_ADMIN, ROLES.OPERATIONS_MANAGER),
+  authorizeRoles(ROLES.CUSTOMER, ROLES.SERVICE_PROVIDER, ROLES.SUPPORT_AGENT, ROLES.PLATFORM_ADMIN, ROLES.OPERATIONS_MANAGER),
   pagination,
   validate,
   listRequests

@@ -14,7 +14,7 @@ const AvailabilityPage = () => {
 
   const fetchSlots = async () => {
     try {
-      const res = await api.get('/providers/availability');
+      const res = await api.get('/providers/me/availability');
       if (res.data.success) setSlots(res.data.data.slots || []);
     } catch (err) {
       console.error('Failed to fetch availability slots:', err);
@@ -26,7 +26,7 @@ const AvailabilityPage = () => {
   const handleAddSlot = async (slotData) => {
     setActionLoading(true);
     try {
-      const res = await api.post('/providers/availability', slotData);
+      const res = await api.post('/providers/me/availability', slotData);
       if (res.data.success) {
         setSlots((prev) => [...prev, res.data.data.slot]);
       }
@@ -39,7 +39,7 @@ const AvailabilityPage = () => {
 
   const handleDeleteSlot = async (id) => {
     try {
-      await api.delete(`/providers/availability/${id}`);
+      await api.delete(`/providers/me/availability/${id}`);
       setSlots((prev) => prev.filter((s) => s._id !== id));
     } catch (err) {
       alert('Failed to delete slot.');

@@ -15,7 +15,7 @@ const EarningsPage = () => {
 
   const fetchData = async () => {
     try {
-      const pRes = await api.get('/providers/profile');
+      const pRes = await api.get('/providers/profile/me');
       if (pRes.data.success) {
         const providerData = pRes.data.data.provider || pRes.data.data;
         setProfile(providerData);
@@ -41,7 +41,7 @@ const EarningsPage = () => {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-2">
+        <div className="cc-card p-6 rounded-2xl space-y-2">
           <span className="text-xs font-semibold text-slate-500">Estimated Total Revenue</span>
           <div className="text-3xl font-extrabold text-slate-900 font-display flex items-center gap-1">
             ₹{estimatedEarnings.toLocaleString()}
@@ -51,7 +51,7 @@ const EarningsPage = () => {
           </span>
         </div>
 
-        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-2">
+        <div className="cc-card p-6 rounded-2xl space-y-2">
           <span className="text-xs font-semibold text-slate-500">Average Rating</span>
           <div className="text-3xl font-extrabold text-slate-900 font-display flex items-center gap-1">
             {profile?.averageRating?.toFixed(1) || '4.8'}
@@ -60,7 +60,7 @@ const EarningsPage = () => {
           <span className="text-[10px] text-slate-400 font-medium">Based on {profile?.totalReviews || 0} customer reviews</span>
         </div>
 
-        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-2">
+        <div className="cc-card p-6 rounded-2xl space-y-2">
           <span className="text-xs font-semibold text-slate-500">Completed Jobs</span>
           <div className="text-3xl font-extrabold text-slate-900 font-display">
             {profile?.completedJobs || 0}
@@ -73,7 +73,7 @@ const EarningsPage = () => {
       <div className="space-y-4">
         <h2 className="font-bold text-slate-900 text-lg font-display">Customer Feedback & Reviews</h2>
         {reviews.length === 0 ? (
-          <div className="bg-white p-8 rounded-2xl border border-slate-200 text-center text-slate-400 text-xs">
+          <div className="cc-card p-8 rounded-2xl text-center text-slate-400 text-xs">
             No reviews submitted yet.
           </div>
         ) : (

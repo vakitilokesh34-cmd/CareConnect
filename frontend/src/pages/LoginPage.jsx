@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ShieldCheck, LogIn, Lock, Mail } from 'lucide-react';
+import { ShieldCheck, LogIn, Lock, Mail, Sparkles } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import ErrorMessage from '../components/ErrorMessage';
 
@@ -28,19 +29,22 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center p-4 bg-slate-900 text-white">
-      <div className="max-w-md w-full bg-slate-850 rounded-3xl p-8 border border-slate-800 shadow-2xl space-y-6">
-        <div className="text-center space-y-2">
-          <div className="w-12 h-12 rounded-2xl bg-indigo-600 flex items-center justify-center mx-auto shadow-lg shadow-indigo-600/30">
-            <ShieldCheck className="w-7 h-7 text-white" />
+    <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center p-4 text-white relative">
+      <div className="w-full max-w-md cc-card rounded-3xl p-8 border border-indigo-500/30 shadow-2xl shadow-indigo-900/40 space-y-6 cc-rise relative overflow-hidden">
+        <div className="absolute -top-24 -right-24 w-64 h-64 bg-indigo-500/20 rounded-full blur-3xl cc-spin-slow" />
+        <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-cyan-500/20 rounded-full blur-3xl cc-spin-slow" />
+
+        <div className="text-center space-y-2 relative">
+          <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-indigo-600 to-cyan-500 flex items-center justify-center mx-auto shadow-lg shadow-indigo-500/40 cc-float">
+            <ShieldCheck className="w-8 h-8 text-white" />
           </div>
-          <h2 className="text-2xl font-extrabold font-display">Welcome Back</h2>
+          <h2 className="text-2xl font-extrabold font-display cc-gradient-text">Welcome Back</h2>
           <p className="text-xs text-slate-400">Sign in to access your CareConnect account</p>
         </div>
 
         {error && <ErrorMessage message={error} />}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4 relative">
           <div>
             <label className="block text-xs font-semibold text-slate-300 mb-1">Email Address</label>
             <div className="relative">
@@ -51,7 +55,7 @@ const LoginPage = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="name@example.com"
-                className="w-full pl-9 pr-3 py-2.5 bg-slate-800 text-white rounded-xl text-xs border border-slate-700 focus:ring-2 focus:ring-indigo-500 focus:outline-none placeholder-slate-500"
+                className="w-full pl-9 pr-3 py-2.5 bg-white/90 text-slate-900 rounded-xl text-xs cc-input placeholder-slate-500"
               />
             </div>
           </div>
@@ -66,7 +70,7 @@ const LoginPage = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full pl-9 pr-3 py-2.5 bg-slate-800 text-white rounded-xl text-xs border border-slate-700 focus:ring-2 focus:ring-indigo-500 focus:outline-none placeholder-slate-500"
+                className="w-full pl-9 pr-3 py-2.5 bg-white/90 text-slate-900 rounded-xl text-xs cc-input placeholder-slate-500"
               />
             </div>
           </div>
@@ -74,19 +78,24 @@ const LoginPage = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl text-xs shadow-lg shadow-indigo-600/30 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+            className="w-full py-3 cc-btn-glow text-white font-bold rounded-xl text-xs flex items-center justify-center gap-2 disabled:opacity-50"
           >
             <LogIn className="w-4 h-4" />
             {loading ? 'Authenticating...' : 'Sign In'}
           </button>
         </form>
 
-        <p className="text-center text-xs text-slate-400 pt-2">
-          Don't have an account?{' '}
-          <Link to="/register" className="text-indigo-400 font-semibold hover:underline">
-            Register here
-          </Link>
-        </p>
+        <div className="relative text-center text-xs text-slate-400 pt-2">
+          <span className="inline-flex items-center gap-1 text-indigo-300/80 mb-3">
+            <Sparkles className="w-3 h-3 text-cyan-400" /> Secure AI-powered access
+          </span>
+          <p>
+            Don't have an account?{' '}
+            <Link to="/register" className="text-cyan-300 font-semibold hover:text-cyan-200 transition-colors">
+              Register here
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );

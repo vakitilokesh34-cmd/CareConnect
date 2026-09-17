@@ -126,7 +126,7 @@ const BookingDetails = () => {
       {error && <ErrorMessage message={error} />}
 
       {/* Main Details Card */}
-      <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-6">
+      <div className="cc-card rounded-3xl p-6 sm:p-8 space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-100">
           <div>
             <h1 className="text-2xl font-extrabold text-slate-900 font-display">
@@ -196,7 +196,7 @@ const BookingDetails = () => {
 
             {invoice && (
               <Link
-                to={`/dashboard/invoices/${invoice._id}`}
+                to={`/dashboard/customer/bookings/${booking._id}/invoice`}
                 className="px-3 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl flex items-center gap-1.5"
               >
                 <FileText className="w-4 h-4" /> View Invoice
@@ -257,7 +257,7 @@ const BookingDetails = () => {
       {/* Review Modal */}
       {showReviewModal && (
         <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4">
+          <div className="cc-card rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4">
             <h3 className="font-bold text-slate-900 text-lg">Leave a Review</h3>
             <form onSubmit={handleSubmitReview} className="space-y-4 text-xs">
               <div>
@@ -314,7 +314,7 @@ const BookingDetails = () => {
       {/* Dispute Modal */}
       {showDisputeModal && (
         <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4">
+          <div className="cc-card rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4">
             <h3 className="font-bold text-slate-900 text-lg">Raise Dispute / Complaint</h3>
             <form onSubmit={handleRaiseDispute} className="space-y-4 text-xs">
               <div>

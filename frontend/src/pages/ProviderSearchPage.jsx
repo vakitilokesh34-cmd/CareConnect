@@ -58,16 +58,16 @@ const ProviderSearchPage = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8 text-white">
       <div>
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-100 text-indigo-700 text-xs font-semibold mb-2">
-          <Sparkles className="w-4 h-4 text-indigo-600" />
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 text-xs font-semibold mb-2 cc-pulse-ring">
+          <Sparkles className="w-4 h-4 text-cyan-400" />
           Verified Service Professionals
         </div>
-        <h1 className="text-3xl font-extrabold text-slate-900 font-display">
+        <h1 className="text-3xl font-extrabold font-display cc-gradient-text">
           Find Service Providers
         </h1>
-        <p className="text-slate-500 text-sm mt-1">
+        <p className="text-slate-300 text-sm mt-1">
           Filter by service category, skills, location, ratings, and experience.
         </p>
       </div>
@@ -85,10 +85,10 @@ const ProviderSearchPage = () => {
 
       {loading ? (
         <LoadingSpinner message="Searching verified service providers..." />
-      ) : providers.length === 0 ? (
-        <div className="bg-white p-12 text-center rounded-2xl border border-slate-200 text-slate-500">
-          <Users className="w-12 h-12 mx-auto text-slate-300 mb-3" />
-          <h3 className="font-bold text-slate-700 text-base">No providers found</h3>
+) : providers.length === 0 ? (
+        <div className="cc-card p-12 text-center rounded-2xl">
+          <Users className="w-12 h-12 mx-auto text-slate-400 mb-3" />
+          <h3 className="font-bold text-slate-900 text-base">No providers found</h3>
           <p className="text-xs text-slate-500 mt-1">Try adjusting your search criteria or resetting filters.</p>
         </div>
       ) : (

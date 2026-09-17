@@ -19,7 +19,7 @@ const AvailabilityCalendar = ({ slots = [], onAddSlot, onDeleteSlot, loading = f
   };
 
   return (
-    <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-6">
+    <div className="cc-card rounded-2xl p-6 space-y-6">
       <div className="flex items-center justify-between border-b border-slate-100 pb-4">
         <div>
           <h3 className="font-bold text-slate-900 text-lg flex items-center gap-2">

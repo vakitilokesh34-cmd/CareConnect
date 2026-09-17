@@ -88,13 +88,13 @@ const ActiveJobs = () => {
       </div>
 
       {bookings.length === 0 ? (
-        <div className="bg-white p-12 text-center rounded-2xl border border-slate-200 text-slate-400 text-xs">
+        <div className="cc-card p-12 text-center rounded-2xl text-slate-400 text-xs">
           No active jobs assigned yet.
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-6">
           {bookings.map((b) => (
-            <div key={b._id} className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-4">
+            <div key={b._id} className="cc-card rounded-3xl p-6 space-y-4">
               <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-100">
                 <div>
                   <span className="text-[10px] uppercase font-bold text-slate-400">Customer: {b.customer?.name}</span>
@@ -131,7 +131,7 @@ const ActiveJobs = () => {
       {/* Status Update Modal */}
       {selectedBooking && (
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4">
+          <div className="cc-card rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <h3 className="font-bold text-slate-900 text-lg">Update Job Progress</h3>
               <button onClick={() => setSelectedBooking(null)} className="p-1 text-slate-400 hover:text-slate-600">

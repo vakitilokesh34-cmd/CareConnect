@@ -24,7 +24,7 @@ const ProviderVerification = () => {
 
   const handleVerify = async (id, status) => {
     try {
-      await api.put(`/admin/providers/${id}/verify`, { status });
+      await api.put(`/admin/providers/${id}/verify`, { verificationStatus: status });
       setProviders((prev) => prev.map((p) => (p._id === id ? { ...p, verificationStatus: status } : p)));
     } catch (err) {
       alert('Verification update failed.');
@@ -42,7 +42,7 @@ const ProviderVerification = () => {
 
       <div className="grid grid-cols-1 gap-4">
         {providers.map((p) => (
-          <div key={p._id} className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div key={p._id} className="cc-card rounded-2xl p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
               <div className="flex items-center gap-2">
                 <h4 className="font-bold text-slate-900 text-base">{p.businessName || p.user?.name}</h4>

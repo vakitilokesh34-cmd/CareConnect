@@ -67,7 +67,7 @@ const ServiceCategories = () => {
       </div>
 
       {/* Add new category form */}
-      <form onSubmit={handleCreateCategory} className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-4 text-xs">
+      <form onSubmit={handleCreateCategory} className="cc-card rounded-3xl p-6 space-y-4 text-xs">
         <h3 className="font-bold text-slate-900 text-sm flex items-center gap-1.5">
           <Plus className="w-4 h-4 text-indigo-600" /> Add New Service Category
         </h3>
@@ -142,7 +142,7 @@ const ServiceCategories = () => {
       {/* Categories List */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {categories.map((cat) => (
-          <div key={cat._id} className="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex items-center justify-between text-xs">
+          <div key={cat._id} className="cc-card rounded-2xl p-4 flex items-center justify-between text-xs">
             <div className="flex items-center gap-3">
               <span className="text-2xl">{cat.icon || '🛠️'}</span>
               <div>

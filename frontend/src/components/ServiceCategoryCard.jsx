@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 const ServiceCategoryCard = ({ category }) => {
   return (
-    <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm hover:shadow-xl hover:border-indigo-200 transition-all duration-300 group flex flex-col justify-between">
+    <div className="cc-card rounded-2xl p-5 hover:shadow-2xl hover:shadow-indigo-500/20 group flex flex-col justify-between">
       <div>
         <div className="flex items-center justify-between mb-4">
           <div className="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-2xl group-hover:scale-110 group-hover:bg-indigo-600 group-hover:text-white transition-all">

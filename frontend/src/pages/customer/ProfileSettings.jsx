@@ -35,7 +35,7 @@ const ProfileSettings = () => {
         <p className="text-xs text-slate-500 mt-1">Manage your account credentials and default service addresses.</p>
       </div>
 
-      <form onSubmit={handleSubmit} className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-5 text-xs">
+      <form onSubmit={handleSubmit} className="cc-card rounded-3xl p-6 space-y-5 text-xs">
         <div>
           <label className="block font-bold text-slate-800 mb-1">Full Name</label>
           <input

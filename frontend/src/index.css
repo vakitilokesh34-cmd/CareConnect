@@ -3,38 +3,312 @@
 @tailwind utilities;
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
     font-family: 'Inter', sans-serif;
-    background: #f8fafc;
+    background: #020617;
     color: #0f172a;
+    overflow-x: hidden;
   }
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Outfit', sans-serif;
   }
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
+/* ============================================================
+   CareConnect 3D Animated Design System
+   ============================================================ */
+
+/* ---- 3D perspective helpers ---- */
+.cc-perspective {
+  perspective: 1600px;
+  perspective-origin: 50% 0%;
+}
+.cc-preserve3d {
+  transform-style: preserve-3d;
+}
+
+/* ---- Glassmorphism cards with 3D tilt on hover ---- */
+.cc-card {
+  position: relative;
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.66));
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(226, 232, 240, 0.75);
+  box-shadow: 0 10px 34px rgba(2, 6, 23, 0.08), 0 0 0 1px rgba(255, 255, 255, 0.4) inset;
+  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.4s;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+.cc-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(1200px 400px at var(--mx, 50%) var(--my, 50%), rgba(99, 102, 241, 0.12), transparent 60%);
+  opacity: 0;
+  transition: opacity 0.4s;
+  pointer-events: none;
+}
+.cc-card:hover {
+  transform: translateY(-6px) rotateX(3deg) rotateY(-3deg);
+  box-shadow: 0 24px 60px rgba(79, 70, 229, 0.22), 0 60px 140px -40px rgba(6, 182, 212, 0.35);
+  border-color: rgba(129, 140, 248, 0.55);
+}
+.cc-card:hover::before {
+  opacity: 1;
+}
+
+/* ---- Animated gradient text ---- */
+.cc-gradient-text {
+  background: linear-gradient(120deg, #6366f1, #06b6d4, #14b8a6, #8b5cf6, #6366f1);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: cc-gradient-shift 8s ease infinite;
+}
+
+@keyframes cc-gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ---- Glow button ---- */
+.cc-btn-glow {
+  position: relative;
+  background: linear-gradient(135deg, #4f46e5, #06b6d4);
+  background-size: 180% 180%;
+  color: #fff;
+  box-shadow: 0 12px 30px -8px rgba(79, 70, 229, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  transition: background-position 0.4s, transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s;
+  overflow: hidden;
+}
+.cc-btn-glow::after {
+  content: '';
+  position: absolute;
+  top: -60%;
+  left: -60%;
+  width: 50%;
+  height: 220%;
+  transform: rotate(25deg) translateX(-60%);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+  animation: cc-shine 4.5s ease-in-out infinite;
+}
+.cc-btn-glow:hover {
+  background-position: 100% 50%;
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 18px 44px -8px rgba(6, 182, 212, 0.7);
+}
+
+@keyframes cc-shine {
+  0%, 60% { transform: rotate(25deg) translateX(-160%); }
+  85%, 100% { transform: rotate(25deg) translateX(320%); }
+}
+
+/* ---- Floating animated gradient orbs ---- */
+.cc-orb {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(60px);
+  opacity: 0.5;
+  pointer-events: none;
+  animation: cc-orb-drift 14s ease-in-out infinite;
+  will-change: transform;
+}
+.cc-orb-1 { width: 420px; height: 420px; background: radial-gradient(circle at 30% 30%, rgba(99, 102, 241, 0.9), rgba(79, 70, 229, 0.1) 70%); top: -120px; left: -80px; }
+.cc-orb-2 { width: 380px; height: 380px; background: radial-gradient(circle at 60% 40%, rgba(6, 182, 212, 0.85), rgba(8, 145, 178, 0.12) 70%); bottom: -100px; right: -60px; animation-delay: -4s; }
+.cc-orb-3 { width: 300px; height: 300px; background: radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.8), rgba(124, 58, 237, 0.1) 70%); top: 40%; left: 55%; animation-delay: -8s; }
+.cc-orb-4 { width: 200px; height: 200px; background: radial-gradient(circle at 50% 50%, rgba(20, 184, 166, 0.8), rgba(13, 148, 136, 0.1) 70%); top: 12%; right: 18%; animation-delay: -2s; }
+
+@keyframes cc-orb-drift {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  33% { transform: translate3d(60px, -50px, 0) scale(1.12); }
+  66% { transform: translate3d(-40px, 40px, 0) scale(0.92); }
+}
+
+.cc-orb-light {
+  opacity: 0.4;
+  filter: blur(70px);
+}
+
+/* ---- Animated perspective grid floor ---- */
+.cc-grid-floor {
+  position: absolute;
+  left: -50%;
+  right: -50%;
+  bottom: -10%;
+  height: 55vh;
+  background-image:
+    linear-gradient(rgba(99, 102, 241, 0.28) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(6, 182, 212, 0.24) 1px, transparent 1px);
+  background-size: 46px 46px;
+  transform: perspective(600px) rotateX(62deg);
+  transform-origin: 50% 100%;
+  animation: cc-grid-scroll 3.6s linear infinite;
+  pointer-events: none;
+  -webkit-mask-image: radial-gradient(ellipse at 50% 100%, rgba(0, 0, 0, 0.9), transparent 70%);
+          mask-image: radial-gradient(ellipse at 50% 100%, rgba(0, 0, 0, 0.9), transparent 70%);
+}
+
+@keyframes cc-grid-scroll {
+  from { background-position: 0 0; }
+  to { background-position: 0 46px; }
+}
+
+.cc-grid-floor-light {
+  background-image:
+    linear-gradient(rgba(99, 102, 241, 0.35) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(6, 182, 212, 0.28) 1px, transparent 1px);
+}
+
+.cc-particle-light {
+  background: rgba(99, 102, 241, 0.55);
+  box-shadow: 0 0 12px 2px rgba(6, 182, 212, 0.5);
+}
+
+.cc-mouse-glow-light {
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.14), rgba(6, 182, 212, 0.08) 40%, transparent 70%);
+  mix-blend-mode: normal;
+}
+
+/* ---- Floating particles ---- */
+.cc-particle {
+  position: absolute;
   width: 6px;
   height: 6px;
+  border-radius: 9999px;
+  background: rgba(148, 197, 255, 0.8);
+  box-shadow: 0 0 12px 2px rgba(6, 182, 212, 0.7);
+  animation: cc-particle-float 6s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes cc-particle-float {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); opacity: 0.85; }
+  50% { transform: translate3d(0, -120px, 40px) scale(1.6); opacity: 0.25; }
+}
+
+/* ---- Mouse glow that follows cursor ---- */
+.cc-mouse-glow {
+  position: fixed;
+  width: 520px;
+  height: 520px;
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.16), rgba(6, 182, 212, 0.08) 40%, transparent 70%);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 1;
+  mix-blend-mode: screen;
+}
+
+/* ---- Page enter transition ---- */
+@keyframes cc-page-enter {
+  0% { opacity: 0; transform: translateY(26px) perspective(1000px) rotateX(4deg); }
+  100% { opacity: 1; transform: translateY(0) perspective(1000px) rotateX(0); }
+}
+.cc-page-enter {
+  animation: cc-page-enter 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ---- Card entrance stagger ---- */
+@keyframes cc-rise {
+  0% { opacity: 0; transform: translateY(40px) perspective(800px) rotateX(8deg); }
+  100% { opacity: 1; transform: translateY(0) perspective(800px) rotateX(0); }
+}
+.cc-rise {
+  animation: cc-rise 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ---- 3D floating animation ---- */
+@keyframes cc-float {
+  0%, 100% { transform: translateY(0) rotate3d(1, -1, 0, 3deg); }
+  50% { transform: translateY(-16px) rotate3d(1, -1, 0, -3deg); }
+}
+.cc-float { animation: cc-float 6s ease-in-out infinite; }
+
+/* ---- Infinite slow spin on decorative rings ---- */
+@keyframes cc-spin {
+  to { transform: rotate(360deg); }
+}
+.cc-spin-slow { animation: cc-spin 22s linear infinite; }
+
+/* ---- Pulsing glow ring ---- */
+@keyframes cc-pulse-ring {
+  0% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.5); }
+  70% { box-shadow: 0 0 0 22px rgba(99, 102, 241, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); }
+}
+.cc-pulse-ring { animation: cc-pulse-ring 2.6s ease-out infinite; }
+
+/* ---- Flip on hover ---- */
+.cc-flip-box { perspective: 1200px; }
+.cc-flip-inner {
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.cc-flip-box:hover .cc-flip-inner {
+  transform: rotateY(180deg);
+}
+
+/* ---- Shimmer skeleton ---- */
+@keyframes cc-shimmer {
+  0% { background-position: -600px 0; }
+  100% { background-position: 600px 0; }
+}
+.cc-shimmer {
+  background: linear-gradient(90deg, rgba(255,255,255,0.05) 25%, rgba(255,255,255,0.18) 50%, rgba(255,255,255,0.05) 75%);
+  background-size: 600px 100%;
+  animation: cc-shimmer 1.6s linear infinite;
+}
+
+/* ---- Card 3d tilt applied via data attribute (JS driven) ---- */
+.cc-tilt {
+  transform-style: preserve-3d;
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+  will-change: transform;
+}
+
+/* ---- Custom scrollbar (dark) ---- */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: #020617;
 }
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: linear-gradient(180deg, #6366f1, #06b6d4);
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: linear-gradient(180deg, #818cf8, #22d3ee);
 }
 
-/* Animations */
+/* ---- Form fields dark glass ---- */
+.cc-input {
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(148, 163, 184, 0.45);
+  backdrop-filter: blur(8px);
+  transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
+}
+.cc-input:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.18), 0 10px 30px -12px rgba(6, 182, 212, 0.4);
+  transform: translateY(-1px);
+  outline: none;
+}
+
+/* ---- Legacy fade-in kept for compatibility ---- */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(6px); }
   to { opacity: 1; transform: translateY(0); }
 }
-
 .animate-fade-in {
   animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
@@ -42,5 +316,12 @@
 @media (prefers-reduced-motion: no-preference) {
   .animate-fade-in {
     animation-duration: 0.45s;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cc-orb, .cc-particle, .cc-grid-floor, .cc-btn-glow::after,
+  .cc-float, .cc-spin-slow, .cc-card::before {
+    animation: none !important;
   }
 }

@@ -32,13 +32,13 @@ const DisputesPage = () => {
       </div>
 
       {disputes.length === 0 ? (
-        <div className="bg-white p-12 text-center rounded-2xl border border-slate-200 text-slate-400 text-xs">
+        <div className="cc-card p-12 text-center rounded-2xl text-slate-400 text-xs">
           No disputes created.
         </div>
       ) : (
         <div className="space-y-4">
           {disputes.map((d) => (
-            <div key={d._id} className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-3">
+            <div key={d._id} className="cc-card rounded-2xl p-5 space-y-3">
               <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                 <span className="font-bold text-slate-800 text-xs">{d.reason}</span>
                 <span className="px-2.5 py-1 text-[10px] font-bold rounded-full bg-amber-100 text-amber-800 uppercase">
