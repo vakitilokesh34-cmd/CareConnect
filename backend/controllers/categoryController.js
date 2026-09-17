@@ -6,7 +6,7 @@ const asyncHandler = require('../utils/asyncHandler');
 const listCategories = asyncHandler(async (req, res) => {
   const { includeInactive = false, search = '' } = req.query;
   const filter = {};
-  if (includeInactive !== 'true') filter.isActive = true;
+  if (includeInactive !== 'true') filter.isActive = { $ne: false };
   if (search) filter.name = { $regex: search, $options: 'i' };
 
   const categories = await ServiceCategory.find(filter).sort({ name: 1 });
