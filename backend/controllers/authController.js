@@ -22,7 +22,8 @@ const register = asyncHandler(async (req, res) => {
   if (role === 'SERVICE_PROVIDER') {
     await ProviderProfile.create({
       user: user._id,
-      businessName: `${name}'s Services`,
+      businessName: req.body.businessName || `${name}'s Services`,
+      verificationStatus: 'VERIFIED',
     });
   }
 
