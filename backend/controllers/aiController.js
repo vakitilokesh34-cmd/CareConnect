@@ -5,7 +5,7 @@ const { classifyRequest, checkAiHealth } = require('../services/aiService');
 const { recommendProviders } = require('../services/recommendationService');
 
 const classify = asyncHandler(async (req, res) => {
-  const { text } = req.body;
+  const text = req.body.text || req.body.description;
   if (!text || !text.trim()) throw ApiError.badRequest('Please provide the request text to classify');
 
   const result = await classifyRequest(text);
