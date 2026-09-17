@@ -8,12 +8,7 @@ const { classify, recommend, health } = require('../controllers/aiController');
 const router = express.Router();
 
 router.get('/', health);
-router.post(
-  '/classify-request',
-  authenticateUser,
-  authorizeRoles(ROLES.CUSTOMER, ROLES.SUPPORT_AGENT, ROLES.PLATFORM_ADMIN, ROLES.OPERATIONS_MANAGER),
-  classify
-);
-router.post('/recommend-providers', authenticateUser, recommend);
+router.post('/classify-request', classify);
+router.post('/recommend-providers', recommend);
 
 module.exports = router;
