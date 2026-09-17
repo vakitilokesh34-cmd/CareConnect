@@ -99,7 +99,7 @@ const recommendProviders = async ({
   limit = 8,
 }) => {
   const filter = {
-    verificationStatus: 'VERIFIED',
+    verificationStatus: { $in: ['VERIFIED', 'PENDING'] },
     isAvailable: true,
     $or: [
       { serviceCategories: categoryId },
