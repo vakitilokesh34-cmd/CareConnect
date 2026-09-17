@@ -1,7 +1,8 @@
 import React from 'react';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ShieldCheck, LogIn, Lock, Mail, Sparkles } from 'lucide-react';
+import { LogIn, Lock, Mail, Sparkles } from 'lucide-react';
+import CareConnectLogo from '../components/CareConnectLogo';
 import { useAuth } from '../context/AuthContext';
 import ErrorMessage from '../components/ErrorMessage';
 
@@ -35,8 +36,8 @@ const LoginPage = () => {
         <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-cyan-500/20 rounded-full blur-3xl cc-spin-slow" />
 
         <div className="text-center space-y-2 relative">
-          <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-indigo-600 to-cyan-500 flex items-center justify-center mx-auto shadow-lg shadow-indigo-500/40 cc-float">
-            <ShieldCheck className="w-8 h-8 text-white" />
+          <div className="flex items-center justify-center mb-1">
+            <CareConnectLogo size={56} />
           </div>
           <h2 className="text-2xl font-extrabold font-display cc-gradient-text">Welcome Back</h2>
           <p className="text-xs text-slate-600">Sign in to access your CareConnect account</p>

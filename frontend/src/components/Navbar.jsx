@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ShieldCheck, User, LogOut, LayoutDashboard, Sparkles, ChevronDown, Menu, X } from 'lucide-react';
+import { User, LogOut, LayoutDashboard, Sparkles, ChevronDown, Menu, X } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import NotificationDropdown from './NotificationDropdown';
+import CareConnectLogo from './CareConnectLogo';
 
 const Navbar = () => {
   const { user, logout } = useAuth();
@@ -38,11 +39,11 @@ const Navbar = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex items-center gap-3">
-            <Link to="/" className="flex items-center gap-2 group">
-              <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-cyan-400 flex items-center justify-center shadow-lg shadow-indigo-500/40 cc-float group-hover:scale-110 transition-transform">
-                <ShieldCheck className="w-6 h-6 text-white" />
+            <Link to="/" className="flex items-center gap-2.5 group hover:opacity-90 transition-opacity">
+              <div className="cc-float group-hover:scale-110 transition-transform">
+                <CareConnectLogo size={40} />
               </div>
-              <span className="text-xl font-bold font-display tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent">
+              <span className="text-xl font-bold font-display tracking-tight bg-gradient-to-r from-white via-indigo-200 to-cyan-300 bg-clip-text text-transparent">
                 Care<span className="cc-gradient-text">Connect</span>
               </span>
             </Link>
