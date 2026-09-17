@@ -22,8 +22,12 @@ const IncomingRequests = () => {
     try {
       const res = await api.get('/requests');
       if (res.data.success) {
-        // filter open or quotes_received requests
-        setRequests((res.data.data.requests || []).filter((r) => r.status === 'OPEN' || r.status === 'QUOTES_RECEIVED'));
+        // Show open, AI-matched, and quotable requests
+        const validStatuses = ['OPEN', 'PROVIDERS_MATCHED', 'QUOTES_RECEIVED'];
+        const filtered = (res.data.data.requests || []).filter((r) =>
+          validStatuses.includes(r.status)
+        );
+        setRequests(filtered);
       }
     } catch (err) {
       console.error('Failed to fetch open requests:', err);
