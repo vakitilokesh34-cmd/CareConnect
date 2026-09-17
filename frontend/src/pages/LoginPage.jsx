@@ -29,7 +29,7 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center p-4 text-white relative">
+    <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center p-4 relative">
       <div className="w-full max-w-md cc-card rounded-3xl p-8 border border-indigo-500/30 shadow-2xl shadow-indigo-900/40 space-y-6 cc-rise relative overflow-hidden">
         <div className="absolute -top-24 -right-24 w-64 h-64 bg-indigo-500/20 rounded-full blur-3xl cc-spin-slow" />
         <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-cyan-500/20 rounded-full blur-3xl cc-spin-slow" />
@@ -39,38 +39,38 @@ const LoginPage = () => {
             <ShieldCheck className="w-8 h-8 text-white" />
           </div>
           <h2 className="text-2xl font-extrabold font-display cc-gradient-text">Welcome Back</h2>
-          <p className="text-xs text-slate-400">Sign in to access your CareConnect account</p>
+          <p className="text-xs text-slate-600">Sign in to access your CareConnect account</p>
         </div>
 
         {error && <ErrorMessage message={error} />}
 
         <form onSubmit={handleSubmit} className="space-y-4 relative">
           <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-1">Email Address</label>
+            <label className="block text-xs font-semibold text-slate-700 mb-1">Email Address</label>
             <div className="relative">
-              <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <Mail className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="name@example.com"
-                className="w-full pl-9 pr-3 py-2.5 bg-white/90 text-slate-900 rounded-xl text-xs cc-input placeholder-slate-500"
+                className="w-full pl-9 pr-3 py-2.5 bg-white/90 text-slate-900 rounded-xl text-xs border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:outline-none placeholder-slate-500 transition-shadow"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-1">Password</label>
+            <label className="block text-xs font-semibold text-slate-700 mb-1">Password</label>
             <div className="relative">
-              <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <Lock className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="password"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full pl-9 pr-3 py-2.5 bg-white/90 text-slate-900 rounded-xl text-xs cc-input placeholder-slate-500"
+                className="w-full pl-9 pr-3 py-2.5 bg-white/90 text-slate-900 rounded-xl text-xs border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:outline-none placeholder-slate-500 transition-shadow"
               />
             </div>
           </div>
@@ -85,13 +85,13 @@ const LoginPage = () => {
           </button>
         </form>
 
-        <div className="relative text-center text-xs text-slate-400 pt-2">
-          <span className="inline-flex items-center gap-1 text-indigo-300/80 mb-3">
-            <Sparkles className="w-3 h-3 text-cyan-400" /> Secure AI-powered access
+        <div className="relative text-center text-xs text-slate-600 pt-2">
+          <span className="inline-flex items-center gap-1 text-indigo-600 font-medium mb-3">
+            <Sparkles className="w-3 h-3 text-cyan-500" /> Secure AI-powered access
           </span>
           <p>
             Don't have an account?{' '}
-            <Link to="/register" className="text-cyan-300 font-semibold hover:text-cyan-200 transition-colors">
+            <Link to="/register" className="text-indigo-600 font-bold hover:text-indigo-800 transition-colors">
               Register here
             </Link>
           </p>

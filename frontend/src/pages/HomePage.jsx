@@ -185,8 +185,8 @@ const HomePage = () => {
                 <div className={`w-12 h-12 rounded-2xl bg-gradient-to-tr ${step.grad} text-white font-bold flex items-center justify-center text-xl shadow-lg shadow-indigo-900/30 cc-float`}>
                   {step.n}
                 </div>
-                <h3 className="font-bold text-white text-base">{step.title}</h3>
-                <p className="text-xs text-slate-300 leading-relaxed">{step.desc}</p>
+                <h3 className="font-bold text-slate-900 text-base">{step.title}</h3>
+                <p className="text-xs text-slate-600 leading-relaxed">{step.desc}</p>
               </div>
             ))}
           </div>
