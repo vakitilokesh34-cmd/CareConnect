@@ -40,7 +40,7 @@ const Navbar = () => {
           {/* Logo */}
           <div className="flex items-center gap-3">
             <Link to="/" className="flex items-center gap-2.5 group hover:opacity-90 transition-opacity">
-              <div className="cc-float group-hover:scale-110 transition-transform">
+              <div className="flex-shrink-0">
                 <CareConnectLogo size={40} />
               </div>
               <span className="text-xl font-bold font-display tracking-tight bg-gradient-to-r from-white via-indigo-200 to-cyan-300 bg-clip-text text-transparent">

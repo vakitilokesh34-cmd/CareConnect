@@ -9,7 +9,7 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           <div className="space-y-3">
-            <div className="flex items-center gap-2.5 cc-float">
+            <div className="flex items-center gap-2.5">
               <CareConnectLogo size={32} />
               <span className="text-lg font-bold text-white font-display">
                 Care<span className="cc-gradient-text">Connect</span>
