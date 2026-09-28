@@ -24,8 +24,8 @@ class ApiError extends Error {
     return new ApiError(404, `${resource} not found`, [], 'NOT_FOUND');
   }
 
-  static conflict(message) {
-    return new ApiError(409, message, [], 'CONFLICT');
+  static conflict(message, errors = []) {
+    return new ApiError(409, message, errors, 'CONFLICT');
   }
 
   static validation(message, errors) {

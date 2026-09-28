@@ -5,7 +5,7 @@ const ApiError = require('../utils/ApiError');
 const ApiResponse = require('../utils/ApiResponse');
 const asyncHandler = require('../utils/asyncHandler');
 const { classifyRequest } = require('../services/aiService');
-const { recallMemories, retainMemory } = require('../services/hindsightService');
+const { recallMemories, retainMemory, getCustomerMemories } = require('../services/hindsightService');
 const { recommendProviders } = require('../services/recommendationService');
 const { notifyProviderOfRequest } = require('../services/notificationService');
 
@@ -42,16 +42,17 @@ const createRequest = asyncHandler(async (req, res) => {
 
   try {
     memories = await recallMemories(
-      `Customer ${customerId}: previous service requests, issues, preferences, and service history related to: ${description}`
+      `Customer ${customerId}: previous service requests, issues, preferences, and service history related to: ${description}`,
+      customerId
     );
 
-    console.log('Hindsight recalled memories:', memories);
+    console.log(`[Hindsight] Recalled ${memories.length} relevant memories for customer.`);
   } catch (error) {
-    console.error('Hindsight recall failed:', error.message);
+    console.warn('[Hindsight] Recall notice:', error.message);
   }
 
-  // 3. AI classification
-  const ai = await classifyRequest(description);
+  // 3. AI classification enhanced with customer history & preferences
+  const ai = await classifyRequest(description, memories);
 
   // 4. Find matching ServiceCategory by name
   const category = await ServiceCategory.findOne({
@@ -419,6 +420,12 @@ const deleteRequest = asyncHandler(async (req, res) => {
   res.json(ApiResponse.ok('Service request deleted'));
 });
 
+const getMyMemories = asyncHandler(async (req, res) => {
+  const customerId = req.user._id.toString();
+  const memories = await getCustomerMemories(customerId, 15);
+  res.json(ApiResponse.ok('Customer memories retrieved', { memories }));
+});
+
 module.exports = {
   createRequest,
   listRequests,
@@ -426,4 +433,5 @@ module.exports = {
   updateRequest,
   cancelRequest,
   deleteRequest,
+  getMyMemories,
 };

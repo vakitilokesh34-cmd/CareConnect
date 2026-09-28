@@ -13,8 +13,16 @@ const register = asyncHandler(async (req, res) => {
     User.isEmailTaken(email),
     User.isPhoneTaken(phone),
   ]);
-  if (emailTaken) throw ApiError.conflict('An account with this email already exists');
-  if (phoneTaken) throw ApiError.conflict('An account with this phone number already exists');
+  if (emailTaken) {
+    throw ApiError.conflict('An account with this email already exists', [
+      { field: 'email', message: 'An account with this email already exists' },
+    ]);
+  }
+  if (phoneTaken) {
+    throw ApiError.conflict('An account with this phone number already exists', [
+      { field: 'phone', message: 'An account with this phone number already exists' },
+    ]);
+  }
 
   const user = await User.create({ name, email, password, phone, role });
   const token = generateToken(user);

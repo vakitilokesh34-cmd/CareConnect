@@ -31,6 +31,7 @@ const CreateServiceRequest = () => {
 
   // AI Classification result state
   const [aiClassification, setAiClassification] = useState(null);
+  const [recalledMemories, setRecalledMemories] = useState([]);
   const [aiLoading, setAiLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
@@ -60,7 +61,9 @@ const CreateServiceRequest = () => {
       const res = await api.post('/ai/classify-request', { description });
       if (res.data.success) {
         const classification = res.data.data.classification || res.data.data;
+        const memories = res.data.data.recalledMemories || [];
         setAiClassification(classification);
+        setRecalledMemories(memories);
         if (!title && classification.category) {
           setTitle(`${classification.category} - ${classification.urgency || 'Standard'} Priority`);
         }
@@ -207,6 +210,18 @@ const CreateServiceRequest = () => {
                     </span>
                   ))}
                 </div>
+              </div>
+            )}
+
+            {recalledMemories && recalledMemories.length > 0 && (
+              <div className="bg-indigo-950/70 border border-indigo-500/30 rounded-xl p-3 text-xs space-y-1">
+                <div className="flex items-center gap-1.5 text-indigo-300 font-bold text-[11px]">
+                  <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
+                  <span>CareConnect Memory Engine Applied</span>
+                </div>
+                <p className="text-slate-300 text-[11px]">
+                  Identified {recalledMemories.length} past preference(s) / history record(s) to optimize urgency and recommendations.
+                </p>
               </div>
             )}
           </div>

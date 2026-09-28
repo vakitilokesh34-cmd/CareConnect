@@ -36,10 +36,16 @@ const RegisterPage = () => {
       navigate('/dashboard');
     } catch (err) {
       const data = err.response?.data;
-      if (data?.errors && Array.isArray(data.errors)) {
-        setError(data.errors.map((e) => e.msg || e.message).join(' · '));
+      if (Array.isArray(data?.errors) && data.errors.length > 0) {
+        const errorList = data.errors
+          .map((e) => {
+            if (typeof e === 'string') return e;
+            return e.msg || e.message || (e.field ? `${e.field} is invalid` : null);
+          })
+          .filter(Boolean);
+        setError(errorList.length > 0 ? errorList.join(' · ') : (data?.message || 'Registration failed. Try again.'));
       } else {
-        setError(data?.message || 'Registration failed. Try again.');
+        setError(data?.message || err.message || 'Registration failed. Try again.');
       }
     } finally {
       setLoading(false);

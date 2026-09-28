@@ -137,10 +137,22 @@ function heuristicClassify(text) {
   };
 }
 
-async function classifyWithGemini(text) {
+async function classifyWithGemini(text, memories = []) {
   const { GoogleGenerativeAI } = require('@google/generative-ai');
   const genAI = new GoogleGenerativeAI(config.ai.geminiApiKey);
   const model = genAI.getGenerativeModel({ model: config.ai.geminiModel });
+
+  let memoryContext = '';
+  if (Array.isArray(memories) && memories.length > 0) {
+    const memorySnippets = memories
+      .map((m) => (typeof m === 'string' ? m : m.content || m.text))
+      .filter(Boolean)
+      .slice(0, 3)
+      .join('\n- ');
+    if (memorySnippets) {
+      memoryContext = `\nCustomer Long-term History & Previous Preferences (from Hindsight Memory):\n- ${memorySnippets}\n`;
+    }
+  }
 
   const prompt = `You are an expert home-services triage assistant.
 Classify the following home service request. Reply ONLY with strict JSON matching this schema:
@@ -148,7 +160,7 @@ ${JSON.stringify(DEFAULT_EXPECTED_FORMAT, null, 2)}
 
 The "category" must be one of: ${CATEGORY_KNOWLEDGE_BASE.map((c) => `"${c.name}"`).join(', ')}.
 Use concise skill names like: ${['Leak Repair', 'Pipe Repair', 'Drain Unclogging', 'Wiring Repair', 'Deep Cleaning', 'AC Service'].join(', ')}.
-
+${memoryContext}
 Customer request: "${text}"`;
 
   const result = await model.generateContent(prompt);
@@ -177,10 +189,10 @@ Customer request: "${text}"`;
   };
 }
 
-const classifyRequest = async (text) => {
+const classifyRequest = async (text, memories = []) => {
   if (config.ai.geminiApiKey) {
     try {
-      const result = await classifyWithGemini(text);
+      const result = await classifyWithGemini(text, memories);
       return { ...result, gateway: 'gemini', model: config.ai.geminiModel };
     } catch (error) {
       console.warn('Gemini classification failed, using heuristic fallback:', error.message);
@@ -189,10 +201,14 @@ const classifyRequest = async (text) => {
   return { ...heuristicClassify(text), gateway: 'heuristic', model: 'local-keyword-engine' };
 };
 
-const checkAiHealth = () => ({
-  configured: Boolean(config.ai.geminiApiKey),
-  gateway: config.ai.geminiApiKey ? 'gemini' : 'heuristic',
-  categories: CATEGORY_KNOWLEDGE_BASE.length,
-});
+const checkAiHealth = () => {
+  const { getHindsightStatus } = require('./hindsightService');
+  return {
+    configured: Boolean(config.ai.geminiApiKey),
+    gateway: config.ai.geminiApiKey ? 'gemini' : 'heuristic',
+    categories: CATEGORY_KNOWLEDGE_BASE.length,
+    hindsight: getHindsightStatus(),
+  };
+};
 
 module.exports = { classifyRequest, heuristicClassify, checkAiHealth, CATEGORY_KNOWLEDGE_BASE };

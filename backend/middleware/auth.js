@@ -54,4 +54,21 @@ const validateResourceOwnership = (model, { param = 'id', ownerField = 'user' } 
     next();
   });
 
-module.exports = { authenticateUser, authorizeRoles, validateResourceOwnership };
+const optionalAuth = asyncHandler(async (req, res, next) => {
+  const header = req.headers.authorization || req.headers.Authorization;
+  if (header && header.startsWith('Bearer ')) {
+    const token = header.split(' ')[1];
+    try {
+      const payload = verifyToken(token);
+      const user = await User.findById(payload.id);
+      if (user && user.isActive) {
+        req.user = user;
+      }
+    } catch (e) {
+      // ignore invalid token for optional auth
+    }
+  }
+  next();
+});
+
+module.exports = { authenticateUser, authorizeRoles, validateResourceOwnership, optionalAuth };

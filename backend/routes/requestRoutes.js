@@ -3,12 +3,14 @@ const { validate } = require('../middleware/validate');
 const { authenticateUser, authorizeRoles } = require('../middleware/auth');
 const { serviceRequestValidator, idParam, pagination } = require('../validators/resourceValidators');
 const {
-  createRequest, listRequests, getRequest, updateRequest, cancelRequest, deleteRequest,
+  createRequest, listRequests, getRequest, updateRequest, cancelRequest, deleteRequest, getMyMemories,
 } = require('../controllers/requestController');
 const { upload } = require('../middleware/upload');
 const { ROLES } = require('../utils/constants');
 
 const router = express.Router();
+
+router.get('/my-memories', authenticateUser, getMyMemories);
 
 router.post(
   '/',

@@ -26,10 +26,11 @@ const globalErrorHandler = (err, req, res, next) => {
 
   if (error.code === 11000) {
     const field = Object.keys(error.keyValue || {})[0] || 'value';
+    const message = `An account with this ${field} already exists`;
     return res.status(409).json({
       success: false,
-      message: `A record with this ${field} already exists`,
-      errors: [{ field, value: error.keyValue?.[field] }],
+      message,
+      errors: [{ field, message, value: error.keyValue?.[field] }],
     });
   }
 
