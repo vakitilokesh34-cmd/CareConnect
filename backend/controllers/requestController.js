@@ -5,6 +5,7 @@ const ApiError = require('../utils/ApiError');
 const ApiResponse = require('../utils/ApiResponse');
 const asyncHandler = require('../utils/asyncHandler');
 const { classifyRequest } = require('../services/aiService');
+const { recallMemories, retainMemory } = require('../services/hindsightService');
 const { recommendProviders } = require('../services/recommendationService');
 const { notifyProviderOfRequest } = require('../services/notificationService');
 
@@ -14,9 +15,18 @@ const POPULATE = [
 ];
 
 const createRequest = asyncHandler(async (req, res) => {
-  const { title, description, images = [], address, preferredDate, preferredTime } = req.body;
+  const {
+    title,
+    description,
+    images = [],
+    address,
+    preferredDate,
+    preferredTime,
+  } = req.body;
 
-  // 1. Persist the request (status OPEN)
+  const customerId = req.user._id.toString();
+
+  // 1. Persist the request
   const request = await ServiceRequest.create({
     customer: req.user._id,
     title,
@@ -27,11 +37,27 @@ const createRequest = asyncHandler(async (req, res) => {
     preferredTime,
   });
 
-  // 2. AI classification (Gemini when configured, heuristic otherwise)
+  // 2. Recall relevant memories from Hindsight
+  let memories = [];
+
+  try {
+    memories = await recallMemories(
+      `Customer ${customerId}: previous service requests, issues, preferences, and service history related to: ${description}`
+    );
+
+    console.log('Hindsight recalled memories:', memories);
+  } catch (error) {
+    console.error('Hindsight recall failed:', error.message);
+  }
+
+  // 3. AI classification
   const ai = await classifyRequest(description);
 
-  // 3. Find matching ServiceCategory by name
-  const category = await ServiceCategory.findOne({ name: new RegExp(`^${ai.category}$`, 'i') });
+  // 4. Find matching ServiceCategory by name
+  const category = await ServiceCategory.findOne({
+    name: new RegExp(`^${ai.category}$`, 'i'),
+  });
+
   request.AIClassification = {
     category: category ? category.name : ai.category,
     requiredSkills: ai.requiredSkills,
@@ -41,14 +67,16 @@ const createRequest = asyncHandler(async (req, res) => {
     confidence: ai.confidence,
     gateway: ai.gateway,
   };
+
   request.category = category ? category._id : null;
   request.categoryName = category ? category.name : ai.category;
   request.requiredSkills = ai.requiredSkills;
+
   await request.save();
 
-  // 4. Discover + rank matching providers
+  // 5. Discover + rank matching providers
   const scored = await recommendProviders({
-    category: category,
+    category,
     categoryId: category ? category._id : null,
     requiredSkills: ai.requiredSkills,
     preferredDate,
@@ -66,15 +94,42 @@ const createRequest = asyncHandler(async (req, res) => {
     await request.save();
   }
 
-  // 5. Notify matched providers
+  // 6. Notify matched providers
   const providerProfiles = await require('../models/ProviderProfile')
     .find({ _id: { $in: matchedProviderIds } })
     .select('user');
+
   await Promise.all(
     providerProfiles.map((p) =>
       notifyProviderOfRequest(p.user, request._id, request.title)
     )
   );
+
+  // 7. Store this interaction in Hindsight
+  try {
+    await retainMemory(
+      `Customer ${customerId} submitted a service request.
+
+Title: ${title}
+Description: ${description}
+Category: ${request.categoryName}
+Urgency: ${ai.urgency}
+Required skills: ${ai.requiredSkills.join(', ')}
+Preferred date: ${preferredDate || 'not specified'}
+Preferred time: ${preferredTime || 'not specified'}
+Matched providers: ${matchedProviderIds.length}`,
+      {
+        customerId,
+        requestId: request._id.toString(),
+        category: request.categoryName,
+        urgency: ai.urgency,
+      }
+    );
+
+    console.log('Hindsight memory stored successfully.');
+  } catch (error) {
+    console.error('Hindsight retain failed:', error.message);
+  }
 
   const populated = await ServiceRequest.findById(request._id).populate(POPULATE);
 
@@ -83,19 +138,30 @@ const createRequest = asyncHandler(async (req, res) => {
       request: populated,
       recommendations: scored,
       aiClassification: request.AIClassification,
+      previousMemories: memories,
     })
   );
 });
 
 const listRequests = asyncHandler(async (req, res) => {
-  const { status, category, search, page = 1, limit = 10, mine = 'true' } = req.query;
+  const {
+    status,
+    category,
+    search,
+    page = 1,
+    limit = 10,
+    mine = 'true',
+  } = req.query;
+
   const filter = {};
 
   if (req.user.role === 'CUSTOMER') {
-    // Customers can only see their own requests.
     filter.customer = req.user._id;
   } else if (req.user.role === 'SERVICE_PROVIDER') {
-    let profile = await require('../models/ProviderProfile').findOne({ user: req.user._id });
+    let profile = await require('../models/ProviderProfile').findOne({
+      user: req.user._id,
+    });
+
     if (!profile) {
       profile = await require('../models/ProviderProfile').create({
         user: req.user._id,
@@ -107,26 +173,46 @@ const listRequests = asyncHandler(async (req, res) => {
     const orConditions = [
       { aiMatchedProviders: profile._id },
     ];
+
     if (profile.serviceCategories && profile.serviceCategories.length > 0) {
-      orConditions.push({ category: { $in: profile.serviceCategories } });
+      orConditions.push({
+        category: { $in: profile.serviceCategories },
+      });
     }
+
     if (profile.skills && profile.skills.length > 0) {
-      orConditions.push({ requiredSkills: { $in: profile.skills } });
+      orConditions.push({
+        requiredSkills: { $in: profile.skills },
+      });
     }
-    // Also include open / matching incoming requests so providers see available jobs
-    orConditions.push({ status: { $in: ['OPEN', 'PROVIDERS_MATCHED', 'QUOTES_RECEIVED'] } });
+
+    orConditions.push({
+      status: {
+        $in: ['OPEN', 'PROVIDERS_MATCHED', 'QUOTES_RECEIVED'],
+      },
+    });
 
     filter.$or = orConditions;
-  } else if (!['PLATFORM_ADMIN', 'OPERATIONS_MANAGER', 'SUPPORT_AGENT'].includes(req.user.role)) {
+  } else if (
+    !['PLATFORM_ADMIN', 'OPERATIONS_MANAGER', 'SUPPORT_AGENT'].includes(
+      req.user.role
+    )
+  ) {
     throw ApiError.forbidden('Not authorized to view service requests');
   }
 
   if (status && status !== '') {
     filter.status = status;
   } else if (req.user.role === 'SERVICE_PROVIDER') {
-    filter.status = { $in: ['OPEN', 'PROVIDERS_MATCHED', 'QUOTES_RECEIVED'] };
+    filter.status = {
+      $in: ['OPEN', 'PROVIDERS_MATCHED', 'QUOTES_RECEIVED'],
+    };
   }
-  if (category) filter.category = category;
+
+  if (category) {
+    filter.category = category;
+  }
+
   if (search) {
     filter.$or = [
       { title: { $regex: search, $options: 'i' } },
@@ -136,16 +222,24 @@ const listRequests = asyncHandler(async (req, res) => {
   }
 
   const total = await ServiceRequest.countDocuments(filter);
+
   const requests = await ServiceRequest.find(filter)
     .populate(POPULATE)
     .sort({ createdAt: -1 })
     .skip((page - 1) * limit)
     .limit(parseInt(limit, 10));
 
-  res.json(ApiResponse.ok('Service requests retrieved', {
-    requests,
-    pagination: { total, page, limit, totalPages: Math.ceil(total / limit) },
-  }));
+  res.json(
+    ApiResponse.ok('Service requests retrieved', {
+      requests,
+      pagination: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
+      },
+    })
+  );
 });
 
 const getRequest = asyncHandler(async (req, res) => {
@@ -153,43 +247,85 @@ const getRequest = asyncHandler(async (req, res) => {
     .populate(POPULATE)
     .populate('customer', 'name email phone profileImage');
 
-  if (!request) throw ApiError.notFound('Service request');
+  if (!request) {
+    throw ApiError.notFound('Service request');
+  }
 
-  const isOwner = request.customer._id.toString() === req.user._id.toString();
+  const isOwner =
+    request.customer._id.toString() === req.user._id.toString();
+
   const isProvider = req.user.role === 'SERVICE_PROVIDER';
-  const isStaff = ['PLATFORM_ADMIN', 'OPERATIONS_MANAGER', 'SUPPORT_AGENT'].includes(req.user.role);
+
+  const isStaff = [
+    'PLATFORM_ADMIN',
+    'OPERATIONS_MANAGER',
+    'SUPPORT_AGENT',
+  ].includes(req.user.role);
 
   if (!isOwner && !isStaff && !isProvider) {
     throw ApiError.forbidden('You are not authorized to view this request');
   }
 
-  const quotes = await Quote.find({ serviceRequest: request._id })
-    .populate('provider', 'businessName averageRating experience user pricing')
+  const quotes = await Quote.find({
+    serviceRequest: request._id,
+  })
+    .populate(
+      'provider',
+      'businessName averageRating experience user pricing'
+    )
     .sort({ estimatedPrice: 1 });
 
-  res.json(ApiResponse.ok('Service request retrieved', { request, quotes }));
+  res.json(
+    ApiResponse.ok('Service request retrieved', {
+      request,
+      quotes,
+    })
+  );
 });
 
 const updateRequest = asyncHandler(async (req, res) => {
   const request = await ServiceRequest.findById(req.params.id);
-  if (!request) throw ApiError.notFound('Service request');
 
-  if (request.customer.toString() !== req.user._id.toString() &&
-      !['PLATFORM_ADMIN', 'OPERATIONS_MANAGER', 'SUPPORT_AGENT'].includes(req.user.role)) {
+  if (!request) {
+    throw ApiError.notFound('Service request');
+  }
+
+  if (
+    request.customer.toString() !== req.user._id.toString() &&
+    !['PLATFORM_ADMIN', 'OPERATIONS_MANAGER', 'SUPPORT_AGENT'].includes(
+      req.user.role
+    )
+  ) {
     throw ApiError.forbidden('You are not authorized to update this request');
   }
 
   if (['BOOKED', 'CANCELLED', 'COMPLETED'].includes(request.status)) {
-    throw ApiError.badRequest('This request cannot be edited in its current state');
+    throw ApiError.badRequest(
+      'This request cannot be edited in its current state'
+    );
   }
 
-  const allowed = ['title', 'description', 'images', 'address', 'preferredDate', 'preferredTime'];
+  const allowed = [
+    'title',
+    'description',
+    'images',
+    'address',
+    'preferredDate',
+    'preferredTime',
+  ];
+
   allowed.forEach((field) => {
-    if (req.body[field] !== undefined) request[field] = req.body[field];
+    if (req.body[field] !== undefined) {
+      request[field] = req.body[field];
+    }
   });
 
-  if (req.body.description && req.body.description !== request.description) {
+  if (
+    req.body.description &&
+    req.body.description !== request.description
+  ) {
     const ai = await classifyRequest(req.body.description);
+
     request.AIClassification = {
       category: ai.category,
       requiredSkills: ai.requiredSkills,
@@ -199,48 +335,87 @@ const updateRequest = asyncHandler(async (req, res) => {
       confidence: ai.confidence,
       gateway: ai.gateway,
     };
+
     request.categoryName = ai.category;
     request.requiredSkills = ai.requiredSkills;
-    const category = await ServiceCategory.findOne({ name: new RegExp(`^${ai.category}$`, 'i') });
+
+    const category = await ServiceCategory.findOne({
+      name: new RegExp(`^${ai.category}$`, 'i'),
+    });
+
     request.category = category ? category._id : null;
     request.status = 'OPEN';
   }
 
   await request.save();
-  res.json(ApiResponse.ok('Service request updated', { request }));
+
+  res.json(
+    ApiResponse.ok('Service request updated', {
+      request,
+    })
+  );
 });
 
 const cancelRequest = asyncHandler(async (req, res) => {
   const request = await ServiceRequest.findById(req.params.id);
-  if (!request) throw ApiError.notFound('Service request');
+
+  if (!request) {
+    throw ApiError.notFound('Service request');
+  }
 
   if (request.customer.toString() !== req.user._id.toString()) {
-    throw ApiError.forbidden('You are not authorized to cancel this request');
+    throw ApiError.forbidden(
+      'You are not authorized to cancel this request'
+    );
   }
+
   if (request.status === 'BOOKED') {
-    throw ApiError.badRequest('This request is booked. Cancel the booking instead.');
+    throw ApiError.badRequest(
+      'This request is booked. Cancel the booking instead.'
+    );
   }
-  if (request.status === 'CANCELLED') throw ApiError.badRequest('Request is already cancelled');
+
+  if (request.status === 'CANCELLED') {
+    throw ApiError.badRequest('Request is already cancelled');
+  }
 
   request.status = 'CANCELLED';
+
   await request.save();
-  res.json(ApiResponse.ok('Service request cancelled', { request }));
+
+  res.json(
+    ApiResponse.ok('Service request cancelled', {
+      request,
+    })
+  );
 });
 
 const deleteRequest = asyncHandler(async (req, res) => {
   const request = await ServiceRequest.findById(req.params.id);
-  if (!request) throw ApiError.notFound('Service request');
 
-  if (request.customer.toString() !== req.user._id.toString() &&
-      req.user.role !== 'PLATFORM_ADMIN') {
-    throw ApiError.forbidden('You are not authorized to delete this request');
+  if (!request) {
+    throw ApiError.notFound('Service request');
   }
+
+  if (
+    request.customer.toString() !== req.user._id.toString() &&
+    req.user.role !== 'PLATFORM_ADMIN'
+  ) {
+    throw ApiError.forbidden(
+      'You are not authorized to delete this request'
+    );
+  }
+
   if (request.status === 'BOOKED') {
     throw ApiError.badRequest('Booked requests cannot be deleted');
   }
 
-  await Quote.deleteMany({ serviceRequest: request._id });
+  await Quote.deleteMany({
+    serviceRequest: request._id,
+  });
+
   await request.deleteOne();
+
   res.json(ApiResponse.ok('Service request deleted'));
 });
 

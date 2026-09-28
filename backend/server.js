@@ -8,6 +8,7 @@ const connectDB = require('./config/db');
 const routes = require('./routes');
 const { notFoundHandler, globalErrorHandler } = require('./middleware/errorHandler');
 const { checkAiHealth } = require('./services/aiService');
+const { initializeHindsight } = require('./services/hindsightService');
 
 const app = express();
 
@@ -45,6 +46,8 @@ app.use(globalErrorHandler);
 let server;
 const start = async () => {
   await connectDB();
+  await initializeHindsight();
+
   server = app.listen(config.port, () => {
     console.log(`CareConnect server running on http://localhost:${config.port}`);
     console.log(`AI engine: ${config.ai.geminiApiKey ? 'Gemini' : 'heuristic (set GEMINI_API_KEY to enable Gemini)'}`);
